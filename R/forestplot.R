@@ -20,7 +20,8 @@ forestplot <- function(data = testdata,
                        p_col = "Pvalue",
                        width = NULL,
                        height = NULL,
-                       elementId = NULL) {
+                       elementId = NULL,
+                       comparisonWidth=200) {
 
   # forward options using x
   x = list(
@@ -38,7 +39,8 @@ forestplot <- function(data = testdata,
       result_col = result_col,
       result_upper_col = result_upper_col,
       result_lower_col = result_lower_col,
-      p_col = p_col
+      p_col = p_col,
+      comparisonWidth=comparisonWidth
     )
   )
 

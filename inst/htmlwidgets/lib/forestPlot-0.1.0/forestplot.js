@@ -211,6 +211,8 @@
                 return +m[config.result_lower_col];
             });
             var testExtent = [d3.min(all_lower), d3.max(all_upper)];
+            console.log(testData)
+            console.log(testExtent)
             //let testExtent = [0, d3.max(all_upper)];
             testData.testScale = d3.scale
                 .linear()
@@ -541,12 +543,12 @@
             .text(function(d) {
                 return d;
             });
+        console.log(testData.testScale.domain())
         var testAxis = d3.svg
             .axis()
             .scale(testData.testScale)
             .ticks(6)
             .orient('top');
-
         table.head2
             .append('th')
             .text('Comparison')

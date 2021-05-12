@@ -67,3 +67,7 @@ display:inline-block;
 .label{
     font-weight:1000;
 }
+
+.hidden{
+    display:none
+}
