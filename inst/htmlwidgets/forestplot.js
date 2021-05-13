@@ -12,8 +12,10 @@ HTMLWidgets.widget({
 
       renderValue: function(x) {
 
+
         x.data = HTMLWidgets.dataframeToD3(x.data);
         forestPlot(x.data, el, x.settings);
+        
 
       },
 
