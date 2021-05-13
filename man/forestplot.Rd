@@ -19,9 +19,10 @@ forestplot(
   result_upper_col = "CI_Upper",
   result_lower_col = "CI_Lower",
   p_col = "Pvalue",
-  width = NULL,
+  width = "100\%",
   height = NULL,
-  elementId = NULL
+  elementId = NULL,
+  comparisonWidth = 200
 )
 }
 \description{

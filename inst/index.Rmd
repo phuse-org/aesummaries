@@ -24,9 +24,7 @@ This is an example forest plot output given the built in `testdata`
 ```{r, echo=FALSE}
 head(testdata) %>%
   select(-X) %>%
-  kable() %>%
-  kable_styling() %>%
-  scroll_box(width = "100%", height = "200px")
+  kable()
 ```
 
 The `forestplot` function has many parameters we need to specify:

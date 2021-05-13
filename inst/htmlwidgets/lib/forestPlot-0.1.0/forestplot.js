@@ -156,14 +156,8 @@
             .append('div')
             .attr('class', 'controls');
     }
-
-    function makeScales() {
-        var chart = this;
-        var config = this.config;
-
-        chart.colorScale = d3.scale
-            .ordinal()
-            .range([
+    
+    const colors = [
                 '#999',
                 '#e41a1c',
                 '#377eb8',
@@ -173,7 +167,15 @@
                 '#ffff33',
                 '#a65628',
                 '#f781bf'
-            ])
+            ]
+
+    function makeScales() {
+        var chart = this;
+        var config = this.config;
+
+        chart.colorScale = d3.scale
+            .ordinal()
+            .range(colors)
             .domain(
                 chart.config.groups.map(function(m) {
                     return m.group;
@@ -211,8 +213,7 @@
                 return +m[config.result_lower_col];
             });
             var testExtent = [d3.min(all_lower), d3.max(all_upper)];
-            console.log(testData)
-            console.log(testExtent)
+
             //let testExtent = [0, d3.max(all_upper)];
             testData.testScale = d3.scale
                 .linear()
@@ -480,6 +481,11 @@
         });
     }
 
+    function makeLegend (group, color) {
+        return `<div class="legend-circle" style="background-color:${color};"></div>
+        ${group} <br> `
+    }
+   
     function makeHeader(testData) {
         var chart = this;
         var config = this.config;
@@ -492,13 +498,24 @@
         table.head1.append('th');
         table.head1
             .append('th')
-            .text('Groups')
+            .html(`Groups <br><div class="groupLegend" style="font-size:12px;"></div>`)
             .attr('class', 'groupHead')
             .attr('colspan', config.hideCounts ? 1 : config.groups.length + 1);
         table.head1
             .append('th')
             .text(testData.key)
             .attr('colspan', config.pairs.length + 1);
+            
+        d3.select('.groupLegend')
+          .selectAll('div')
+          .data(config.groups)
+          .enter()
+          .append('div')
+          .html(function(d,i) {
+              console.log("groups:" + d.group)
+              console.log(makeLegend(d.group, colors[i]))
+              return( makeLegend(d.group, colors[i]))
+          })
 
         table.head2 = table.head.append('tr');
         table.head2.append('th').text('System Organ Class');
@@ -543,7 +560,7 @@
             .text(function(d) {
                 return d;
             });
-        console.log(testData.testScale.domain())
+
         var testAxis = d3.svg
             .axis()
             .scale(testData.testScale)
