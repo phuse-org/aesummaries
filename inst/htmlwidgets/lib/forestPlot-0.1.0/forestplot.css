@@ -66,6 +66,7 @@ display:inline-block;
 
 .label{
     font-weight:1000;
+    color: black;
 }
 
 .hidden{

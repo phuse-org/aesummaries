@@ -1,0 +1,23 @@
+---
+title: "Example"
+author: "Atorus Research"
+date: "5/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(aesummaries)
+```
+
+## Forest Plot
+
+This is an example forest plot output given the built in `testdata`
+
+```{r}
+head(testdata)
+```
+
+```{r}
+forestplot(testdata)
+```
