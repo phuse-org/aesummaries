@@ -1,22 +1,53 @@
 ---
-title: "Example"
-author: "Atorus Research"
-date: "5/13/2021"
-output: html_document
+title: "Example Forest Plot"
+author: '<img src="logo.svg"></img>'
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    css: styles.css
+  includes:
+    in_header: header.html
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(aesummaries)
+library(magrittr)
+library(kableExtra)
+library(dplyr)
 ```
 
 ## Forest Plot
 
 This is an example forest plot output given the built in `testdata`
 
-```{r}
-head(testdata)
+```{r, echo=FALSE}
+head(testdata) %>%
+  select(-X) %>%
+  kable() %>%
+  kable_styling() %>%
+  scroll_box(width = "100%", height = "200px")
 ```
+
+The `forestplot` function has many parameters we need to specify:
+
+1) `data` the dataset to make the forestplot with
+2) `high_level_col` this column...
+3) `low_level_col` this column...
+4) `group1_col`
+5) `group2_col`
+6) `numerator1_col`
+7) `numerator2_col`
+8) `denominator1_col`
+9) `denominator2_col`
+10)  `test_col`
+11)  `result_col`
+12)  `result_upper_col`
+13)  `result_lower_col`
+14)  `p_col`
+15)  `width`
+16)  `height`
+17)  `elementId`
 
 ```{r}
 forestplot(testdata)
