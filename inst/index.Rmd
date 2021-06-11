@@ -1,6 +1,7 @@
 ---
 title: "Example Forest Plot"
-author: '<img src="logo.svg"></img>'
+author: '<img src="logo.svg"></img><img src="ada.png" style="height:50px;
+    padding-left:20px;"></img>'
 output:
   prettydoc::html_pretty:
     theme: cayman
@@ -21,6 +22,12 @@ library(dplyr)
 
 This is an example forest plot output given the built in `testdata`
 
+
+```{r, eval=FALSE}
+# print the first 6 rows of the test data
+head(testdata)
+```
+
 ```{r, echo=FALSE}
 head(testdata) %>%
   select(-X) %>%
@@ -29,23 +36,21 @@ head(testdata) %>%
 
 The `forestplot` function has many parameters we need to specify:
 
+
 1) `data` the dataset to make the forestplot with
-2) `high_level_col` this column...
-3) `low_level_col` this column...
-4) `group1_col`
-5) `group2_col`
-6) `numerator1_col`
-7) `numerator2_col`
-8) `denominator1_col`
-9) `denominator2_col`
-10)  `test_col`
-11)  `result_col`
-12)  `result_upper_col`
-13)  `result_lower_col`
-14)  `p_col`
-15)  `width`
-16)  `height`
-17)  `elementId`
+2) `high_level_col` The High Level Adverse Event Class (AEBODSYS)
+3) `low_level_col` this column is the Low Level Adverse Event Class (AEDECOD)
+4) `group1_col` Name of first group in comparison (e.g. "Treatmemt")
+5) `group2_col` Name of second group in comparison (e.g. "Placebo")
+6) `numerator1_col` Number of cases (numerator) for group 1
+7) `numerator2_col` Number of cases (numerator) for group 2
+8) `denominator1_col` Number of participants (denominator) for group 1
+9) `denominator2_col` Number of participants (denominator) for group 2
+10)  `test_col` Type of test (e.g. "Odds Ratio")
+11)  `result_col` Result of Test
+12)  `result_upper_col` Upper Limit of Normal for Test Result
+13)  `result_lower_col` Lower Limit of Normal for Test Result
+14)  `p_col` P value for Test Result
 
 ```{r}
 forestplot(testdata)

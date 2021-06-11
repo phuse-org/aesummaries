@@ -1,5 +1,23 @@
 #' Create a widget forest plot table with comparisons
 #'
+#' @param data the dataset to make the forestplot with
+#' @param high_level_col The High Level Adverse Event Class (AEBODSYS)
+#' @param low_level_col this column is the Low Level Adverse Event Class (AEDECOD)
+#' @param group1_col Name of first group in comparison (e.g. "Treatmemt")
+#' @param group2_col Name of second group in comparison (e.g. "Placebo")
+#' @param numerator1_col Number of cases (numerator) for group 1
+#' @param numerator2_col Number of cases (numerator) for group 2
+#' @param denominator1_col Number of participants (denominator) for group 1
+#' @param denominator2_col Number of participants (denominator) for group 2
+#' @param test_col Type of test (e.g. "Odds Ratio")
+#' @param result_col Result of Test
+#' @param result_upper_col Upper Limit of Normal for Test Result
+#' @param result_lower_col Lower Limit of Normal for Test Result
+#' @param p_col P value for Test Result
+#' @param width widget width (default 100%)
+#' @param height widget height (default 100%)
+#' @param elementId id of forestPlot element 
+#' @param comparisonWidth width of comparison column (200)
 #'
 #' @import htmlwidgets
 #'

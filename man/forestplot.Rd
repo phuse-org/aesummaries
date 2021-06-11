@@ -25,6 +25,43 @@ forestplot(
   comparisonWidth = 200
 )
 }
+\arguments{
+\item{data}{the dataset to make the forestplot with}
+
+\item{high_level_col}{The High Level Adverse Event Class (AEBODSYS)}
+
+\item{low_level_col}{this column is the Low Level Adverse Event Class (AEDECOD)}
+
+\item{group1_col}{Name of first group in comparison (e.g. "Treatmemt")}
+
+\item{group2_col}{Name of second group in comparison (e.g. "Placebo")}
+
+\item{numerator1_col}{Number of cases (numerator) for group 1}
+
+\item{numerator2_col}{Number of cases (numerator) for group 2}
+
+\item{denominator1_col}{Number of participants (denominator) for group 1}
+
+\item{denominator2_col}{Number of participants (denominator) for group 2}
+
+\item{test_col}{Type of test (e.g. "Odds Ratio")}
+
+\item{result_col}{Result of Test}
+
+\item{result_upper_col}{Upper Limit of Normal for Test Result}
+
+\item{result_lower_col}{Lower Limit of Normal for Test Result}
+
+\item{p_col}{P value for Test Result}
+
+\item{width}{widget width (default 100%)}
+
+\item{height}{widget height (default 100%)}
+
+\item{elementId}{id of forestPlot element}
+
+\item{comparisonWidth}{width of comparison column (200)}
+}
 \description{
 Create a widget forest plot table with comparisons
 }
