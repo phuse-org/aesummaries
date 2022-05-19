@@ -21,7 +21,7 @@ data_processing<-function(datain,
   }
   }
   if (data_source=="Server"){
-    dsin <-read_sas(paste0("/Volumes/app/cdars/prod/",server_path,"/saseng/cdisc3_0/data_vai/",
+    dsin <-read_sas(paste0("/prod/",server_path,"/data_vai/",
                            'ad',tolower(domain),'.sas7bdat'))
   }
   # processing data
