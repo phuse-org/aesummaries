@@ -72,7 +72,3 @@ edish<-function(datain,subset,xaxisopt,yaxisopt,xrefline,yrefline){
 
   return(list(ptly=output,plot = sp, data = hy_data))
 }
-
-# adlb<-read_sas("C:/Users/vj06/OneDrive - Pfizer/Documents/R/Data/adlb1.sas7bdat")
-# adlb_c<-read.csv("C:/Users/vj06/OneDrive - Pfizer/Documents/R/Data/adlb1.csv")
-# datain<-adlb
