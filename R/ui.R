@@ -7,10 +7,10 @@ options(shiny.maxRequestSize=30*1024^4)
 options(shiny.reactlog=TRUE) 
 ui <- fluidPage(tabsetPanel(
   tabPanel("DMC 1.0", fluid = TRUE,
-  column(width=8,wellPanel(div(style = 'height:20px;',fluidRow(div(style = 'height:20px;',align="Left",h4("DMC Shiny App")))),
+  column(width=8,wellPanel(div(style = 'height:20px;',fluidRow(div(style = 'height:20px;',align="Left",h4("AE/LB Data Visualization App")))),
                            )),
   column(width=2,wellPanel(div(style = 'height:20px;',fluidRow(div(style = 'height:20px;',
-                                                                   helpText(align="center",a("Documentation Link", href="https://pfizer.sharepoint.com/:w:/r/sites/ADaMTLF/Shared%20Documents/R%20Pilot%20Work/RShiny%20App/RShiny%20Enhancement/R_Shiny_Application.docx?d=w90c5c44391084c999c4b131344313581&csf=1&web=1&e=R8ahZG"))
+                                                                   helpText(align="center",a("Documentation Link", href="https://github.com/phuse-org/aesummaries/blob/main/README.md"))
   ))))),
   column(width=2,wellPanel(div(style= 'height:50px;',fluidRow(column(width=6,div(downloadButton('dplot', '',align='left'))),
                                                               column(width=6,div(radioButtons(inputId = "fmt",label = NULL, choices = c("pdf", "html","pptx")))))))),
@@ -29,7 +29,7 @@ ui <- fluidPage(tabsetPanel(
                                    fluidRow(conditionalPanel(condition = 'input.source=="Local"',
                                                              fileInput("analysis_data", label = "Import data", accept = c(".csv",".sas7bdat")))),
                                    conditionalPanel(condition = 'input.source=="Server"',
-                                                     textInput("server_path", label = "Server Path (proj/sub/prot)",value = "prjB999/B9991010_restricted/B9991010_CSR")))),
+                                                     textInput("server_path", label = "Server Path (proj/sub/prot)",value = "prjAXXX")))),
                    fluidRow(column(width=5,style = "font-size: 12px;",conditionalPanel(condition = "output.fileUploaded",fluidRow(align="Left",uiOutput("obtain_UI")))))
                                                              
          )),
