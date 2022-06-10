@@ -10,7 +10,7 @@ ui <- fluidPage(tabsetPanel(
   column(width=8,wellPanel(div(style = 'height:20px;',fluidRow(div(style = 'height:20px;',align="Left",h4("AE/LB Data Visualization App")))),
                            )),
   column(width=2,wellPanel(div(style = 'height:20px;',fluidRow(div(style = 'height:20px;',
-                                                                   helpText(align="center",a("Documentation Link", href=""))
+                                                                   helpText(align="center",a("Documentation Link", href="https://github.com/phuse-org/aesummaries/blob/main/README.md"))
   ))))),
   column(width=2,wellPanel(div(style= 'height:50px;',fluidRow(column(width=6,div(downloadButton('dplot', '',align='left'))),
                                                               column(width=6,div(radioButtons(inputId = "fmt",label = NULL, choices = c("pdf", "html","pptx")))))))),
