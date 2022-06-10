@@ -8,7 +8,7 @@ data_processing<-function(datain,
                           server_path,
                           data_filter,
                           obs_period,
-                          obs_residual){
+                          obs_residual=NULL){
   # Reading data
   if (data_source=="Local"){
   if (is.null(datain)) return()
@@ -21,11 +21,14 @@ data_processing<-function(datain,
   }
   }
   if (data_source=="Server"){
-    dsin <-read_sas(paste0("/prod/",server_path,"/data_vai/",
+    dsin <-read_sas(paste0("/Volumes/app/cdars/prod/",server_path,"/saseng/cdisc3_0/data_vai/",
                            'ad',tolower(domain),'.sas7bdat'))
   }
   # processing data
   if(domain=="AE"){
+    
+  res1<<-obs_residual
+  
   if(file_ext(datain)=="csv"){
     df1<-dsin%>%mutate(AESTDT = ifelse("AESTDT" %in% names(dsin),ifelse(is.character(AESTDT),as.Date(AESTDT,format="%d%b%Y"),AESTDT),
                                        ifelse(is.character(ASTDT),as.Date(ASTDT,format="%d%b%Y"),ASTDT)),
@@ -80,7 +83,7 @@ data_processing<-function(datain,
   
   # filter data for ae timeframe
   if (obs_period == "Overall Duration ") { df1 <- df1 %>% filter(STUDYFL == "Y") 
-  } else if (obs_period == "Other") { df1 <- df1 %>% filter((AESTDT > RFSTDTC) & (AESTDT < (RFENDTC + obs_residual))) }
+  } else if (obs_period == "Other") { df1 <- df1 %>% filter((AESTDT >= RFSTDTC) & (AESTDT < (RFENDTC + obs_residual))) }
   df_out2<<-df1
   }else if(domain=="LB"){
     df1<<-dsin

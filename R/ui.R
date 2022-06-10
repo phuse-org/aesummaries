@@ -7,10 +7,10 @@ options(shiny.maxRequestSize=30*1024^4)
 options(shiny.reactlog=TRUE) 
 ui <- fluidPage(tabsetPanel(
   tabPanel("DMC 1.0", fluid = TRUE,
-  column(width=8,wellPanel(div(style = 'height:20px;',fluidRow(div(style = 'height:20px;',align="Left",h4("AE/LB Data Visualization App")))),
+  column(width=8,wellPanel(div(style = 'height:20px;',fluidRow(div(style = 'height:20px;',align="Left",h4("DMC Shiny App")))),
                            )),
   column(width=2,wellPanel(div(style = 'height:20px;',fluidRow(div(style = 'height:20px;',
-                                                                   helpText(align="center",a("Documentation Link", href="https://github.com/phuse-org/aesummaries/blob/main/README.md"))
+                                                                   helpText(align="center",a("Documentation Link", href="https://pfizer.sharepoint.com/:w:/r/sites/ADaMTLF/Shared%20Documents/R%20Pilot%20Work/RShiny%20App/RShiny%20Enhancement/R_Shiny_Application.docx?d=w90c5c44391084c999c4b131344313581&csf=1&web=1&e=R8ahZG"))
   ))))),
   column(width=2,wellPanel(div(style= 'height:50px;',fluidRow(column(width=6,div(downloadButton('dplot', '',align='left'))),
                                                               column(width=6,div(radioButtons(inputId = "fmt",label = NULL, choices = c("pdf", "html","pptx")))))))),
@@ -29,11 +29,11 @@ ui <- fluidPage(tabsetPanel(
                                    fluidRow(conditionalPanel(condition = 'input.source=="Local"',
                                                              fileInput("analysis_data", label = "Import data", accept = c(".csv",".sas7bdat")))),
                                    conditionalPanel(condition = 'input.source=="Server"',
-                                                     textInput("server_path", label = "Server Path (proj/sub/prot)",value = "prjAxxx")))),
+                                                     textInput("server_path", label = "Server Path (proj/sub/prot)",value = "prjB999/B9991010_restricted/B9991010_CSR")))),
                    fluidRow(column(width=5,style = "font-size: 12px;",conditionalPanel(condition = "output.fileUploaded",fluidRow(align="Left",uiOutput("obtain_UI")))))
                                                              
          )),
-         conditionalPanel(condition='input.domain=="LB"',
+         conditionalPanel(condition='input.domain=="LB" && output.fileUploaded',
                           wellPanel(fluidRow(column(width=12,style = "font-size: 12px;",
                                                     textInput("subset", "SUBSET",value="PARAMCD%in%c('L00028S','L00030S','L00021S')")),br(),
                                              h6('X Axis Options'),
@@ -70,15 +70,18 @@ ui <- fluidPage(tabsetPanel(
                                                     textInput("rlylinetyp","Line Type",value="dashed")),br()
                                              
                           ))),
-          conditionalPanel(condition='input.domain=="AE"',
+          conditionalPanel(condition='input.domain=="AE" && output.fileUploaded',
                            wellPanel(fluidRow(column(width=12,style = "font-size: 12px;",
-                                    selectInput("period", "Period",choices = c("Overall Duration","Other"), width="75%"),	 uiOutput("period_please_specify_UI"))),
+                                    selectInput("period", "Period",choices = c("Overall Duration","Other"), width="75%"),	
+                                    conditionalPanel(condition='input.period == "Other"',numericInput("period_please_specify",
+                                                                                                      HTML("Please enter residual period (in days)"),
+                                                                                                      value = 30, min = 0, max = 10^5)))),
                                     fluidRow(column(width=12,style = "font-size: 12px;",
                                              selectInput("ae_filter", "Adverse Event filter(s)", 
                                                          choices=c("Treatment Emergent","Serious","Drug-related","Mild","Moderate","Severe","Recovered/Resolved","Recovering/Resolving","Not Recovered/Not Resolved","Fatal"), 
                                                          selected=NULL, multiple=TRUE))),
                                     fluidRow(column(width=6,style = "font-size: 12px;",selectInput("summary_by", "Summary By", choices = c("Patients","Events"), width="75%")),
-                                               column(width=6,style = "font-size: 12px;",selectInput("review_by", "Review By", choices = c("PT", "SOC"), width="75%"), uiOutput("review_by_please_specify_UI")),
+                                               column(width=6,style = "font-size: 12px;",selectInput("review_by", "Review By", choices = c("PT", "SOC"), width="75%")),
                                              ),hr(),
                                     fluidRow(align = "center", style = "font-size:12px;",
                                                       sliderInput(width=250,"cutoff", "Cutoff of Incidence (%)",

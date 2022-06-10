@@ -25,9 +25,7 @@ server <- function(input, output, session) {
                         server_path=input$server_path,
                         data_filter=input$ae_filter,
                         obs_period=input$period,
-                        obs_residual=ifelse(input$period != "Other",NULL, 
-                                            as.numeric(renderText({input$period_please_specify})()))
-                        ),
+                        obs_residual=input$period_please_specify),
                  message = "If reading data from server...",
                  detail = "This step should take a while.",
                  min = 0, max = 1, value = 1)
@@ -56,15 +54,7 @@ server <- function(input, output, session) {
     req(input$review_by)
   })
 
-  output$period_please_specify_UI <- renderUI({
-    req(data$data_in) 
-    req(input$period)
-    if (input$period != "Other") return()
-    numericInput("period_please_specify",
-                 HTML("Please enter residual period (in days)"),
-                 value = 30, min = 0, max = 10^5)
-  })
-  
+
   output$treatment1_UI <- renderUI({
     req(data$data_in) 
     req(input$summary_by != "Events")
