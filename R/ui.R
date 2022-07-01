@@ -97,7 +97,7 @@ ui <- fluidPage(tabsetPanel(
             ),
             conditionalPanel(
               condition = 'input.source=="Server"',
-              textInput("server_path", label = "Server Path (proj/sub/prot)", value = "prjB999/B9991010_restricted/B9991010_CSR")
+              textInput("server_path", label = "Server Path (proj)", value = "prjBXXX")
             )
           )
         ),
