@@ -32,7 +32,7 @@ ui <- fluidPage(tabsetPanel(
       style = 'height:20px;', fluidRow(div(style = 'height:20px;',
                                            helpText(
                                              align = "center",
-                                             a("Documentation Link", href = "https://pfizer.sharepoint.com/:w:/r/sites/ADaMTLF/Shared%20Documents/R%20Pilot%20Work/RShiny%20App/RShiny%20Enhancement/R_Shiny_Application.docx?d=w90c5c44391084c999c4b131344313581&csf=1&web=1&e=R8ahZG")
+                                             a("Documentation Link", href = "https://github.com/phuse-org/aesummaries/blob/main/README.md")
                                            )))
     ))),
     column(width = 2, wellPanel(div(
