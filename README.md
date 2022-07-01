@@ -1,5 +1,5 @@
 # aesummaries
-PHUSE Forest Plot Project Repository
+PHUSE AE Forest and Volcano Plot Project Repository
 
 ## install the package
 
