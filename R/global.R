@@ -7,9 +7,9 @@
 ### Declaration of required packages for running the Shiny App smoothly --------
 #install.packages(c("conflicted",
 #                  "fmsb",
-#                  "shinyWidgets" ),repos="",lib = .libPaths()[2])
+#                  "shinyWidgets" ),repos="https://rspm.pfizer.com/cran/2020-12-07",lib = .libPaths()[2])
 
-#setwd("")
+#setwd("C:\\Users\\KBJ\\OneDrive - Pfizer\\Downloads\\OneDrive_1_9-13-2021\\rstudio-export")
 library(shiny) # version: 1.4.0
 library(shinyjs) # version: 1.1
 library(data.table) # version: 1.12.8

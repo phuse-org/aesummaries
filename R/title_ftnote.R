@@ -3,10 +3,10 @@
 # This R Script performs all title & footnotes processing
 ################################################################################
 
-title_ftnote<-function(domain,summary_by,filters,report){
+title_ftnote<-function(domain,summary_by,filters,statistics,report){
   if(domain=="AE"){
   if (report=="Volcano"){
-    t="Volcano plot for Relative Risk of Adverse Events"
+    t = paste0("Volcano plot for ",statistics," of Adverse Events")
     f1=paste0("* N is the total number of ",tolower(summary_by),". \n",
               "Classifications of adverse events are based on the Medical Dictionary for Regulatory Activities (MedDRA v21.1). \n",
               "Dashed horizontal line represents p-value of 0.05 \n",
@@ -15,7 +15,7 @@ title_ftnote<-function(domain,summary_by,filters,report){
               "Totals for the No. of Participants/Events at a higher level are not necessarily the sum of those at the lower levels since a participant may report two or more")
     }
   if (report=="Forest"){
-    t="Forest plot for Relative Risk of Adverse Events"
+    t = paste0("Forest plot for",statistics," of Adverse Events")
     f1=paste0("* N is the total number of ",tolower(summary_by),". \n",
               "Classifications of adverse events are based on the Medical Dictionary for Regulatory Activities (MedDRA v21.1). \n",
               "Dashed Vertical line represents risk value reference line \n",

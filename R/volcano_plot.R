@@ -14,8 +14,7 @@ volcano_plot <- function(data,
                          summary_by,
                          pvalue_label,
                          treatment1_label,
-                         treatment2_label
-)
+                         treatment2_label)
 {
   
   ### Construction of volcano plot ---------------------------------------------
