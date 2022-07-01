@@ -166,6 +166,3 @@ edish <- function(datain,
   ))
 }
 
-# adlb<-read_sas("C:/Users/vj06/OneDrive - Pfizer/Documents/R/Data/adlb1.sas7bdat")
-# adlb_c<-read.csv("C:/Users/vj06/OneDrive - Pfizer/Documents/R/Data/adlb1.csv")
-# datain<-adlb

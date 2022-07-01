@@ -121,9 +121,7 @@ server <- function(input, output, session) {
       if (input$review_by != "SOC") {
         if (!is.null(analysis_data())) {
           data$statistics <- analysis_data()
-        } else if (!is.null(analysis_data())) {
-          data$statistics <- analysis_data()
-        }
+        } 
       }
       if (input$summary_by == "Events") {
         if (input$review_by != "SOC") {

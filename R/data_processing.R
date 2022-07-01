@@ -27,8 +27,7 @@ data_processing<-function(datain,
     dsin<-read_xpt(datain$datapath)
   }
   if (data_source=="Server"){
-    dsin <-read_sas(paste0("/Volumes/app/cdars/prod/",server_path,"/saseng/cdisc3_0/data_vai/",
-                           'ad',tolower(domain),'.sas7bdat'))
+    dsin <-read_sas(paste0(server_path))
   }
   # processing data
   names(dsin) <- toupper(names(dsin))
