@@ -115,7 +115,7 @@ ui <- fluidPage(tabsetPanel(
                              width = 12,
                              style = "font-size: 12px;",
                              textInput("subset", "SUBSET", value =
-                                         "PARAMCD%in%c('L00028S','L00030S','L00021S')")
+                                         "PARAMCD %in% c('AST','ALT','BILI')")
                            ),
                            br(),
                            h6('X Axis Options'),
