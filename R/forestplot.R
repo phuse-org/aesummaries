@@ -1,4 +1,5 @@
 #' Create a widget forest plot table with comparisons
+#' Create a widget forest plot table with comparisons
 #'
 #' @param data the dataset to make the forestplot with
 #' @param high_level_col The High Level Adverse Event Class (AEBODSYS)
