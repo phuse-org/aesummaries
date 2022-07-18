@@ -20,12 +20,13 @@ server <- function(input, output, session) {
   analysis_data <- reactive({
     # SDTM
     withProgress(
-      df <- data_processing(
+      data$data_in <- data_processing(
         datain = input$analysis_data,
         domain = input$domain,
         data_source = input$source,
         server_path = input$server_path,
         data_filter = input$ae_filter,
+        data_subset=input$subset,
         trtvar = input$trt_var,
         obs_period = input$period,
         obs_residual = input$period_please_specify
@@ -45,13 +46,13 @@ server <- function(input, output, session) {
     })
   outputOptions(output, 'fileUploaded', suspendWhenHidden = FALSE)
   domain <- reactive(input$domain)
-  observe({
-    #only runs for SDTM
-    if (!is.null(analysis_data())) {
-      data$data_in <- analysis_data()
-    }
-  })
-  
+  # observe({
+  #   #only runs for SDTM
+  #   if (!is.null(analysis_data())) {
+  #     data$data_in <- analysis_data()
+  #   }
+  # })
+ #print(nrow(data$data_in))
   ### Extract all arms ---------------------------------------------------------
   ARMCD <- reactive({
     req(data$data_in)
@@ -114,20 +115,14 @@ server <- function(input, output, session) {
   
   ### An essential step for obtaining statistics right after data uploading and before the generation of plot ------------------------------------
   observeEvent(input$obtain, {
-    if (input$domain == "AE") {
+    if (nrow(data$data_in)>0){
+      if (input$domain == "AE") {
       if (input$period == "Other") {
         req(input$period_please_specify)
       }
-      if (input$review_by != "SOC") {
-        if (!is.null(analysis_data())) {
-          data$statistics <- analysis_data()
-        } 
-      }
-      if (input$summary_by == "Events") {
-        if (input$review_by != "SOC") {
           withProgress(
             data$statistics <- GetStatistics_all(
-              data = analysis_data(),
+              data = data$data_in,
               review_by = input$review_by,
               summary_by = input$summary_by,
               treatment1 = input$treatment1,
@@ -143,70 +138,6 @@ server <- function(input, output, session) {
             max = 1,
             value = 1
           )
-        } else if (input$review_by == "SOC") {
-          withProgress(
-            data$statistics <- GetStatistics_all(
-              data = analysis_data(),
-              review_by = input$review_by,
-              summary_by = input$summary_by,
-              treatment1 = input$treatment1,
-              treatment2 =
-                input$treatment2,
-              statistics = input$statistics,
-              alpha = input$alpha,
-              cutoff = input$cutoff,
-              sort_opt = input$sort_opt
-            ),
-            message = "Executing Get Statistics for EVENTS/ SOC...",
-            detail = "This step should take a while.",
-            min = 0,
-            max = 1,
-            value = 1
-          )
-        }
-      } else if (input$summary_by == "Patients") {
-        if (input$review_by != "SOC") {
-          withProgress(
-            data$statistics <- GetStatistics_all(
-              data = analysis_data(),
-              review_by = input$review_by,
-              summary_by = input$summary_by,
-              treatment1 = input$treatment1,
-              treatment2 =
-                input$treatment2,
-              statistics = input$statistics,
-              alpha = input$alpha,
-              cutoff = input$cutoff,
-              sort_opt = input$sort_opt
-            ),
-            message = "Executing Get Statistics for PATIENTS/ PT...",
-            detail = "This step should take a while.",
-            min = 0,
-            max = 1,
-            value = 1
-          )
-        } else if (input$review_by == "SOC") {
-          withProgress(
-            data$statistics <- GetStatistics_all(
-              data = analysis_data(),
-              review_by = input$review_by,
-              summary_by = input$summary_by,
-              treatment1 = input$treatment1,
-              treatment2 =
-                input$treatment2,
-              statistics = input$statistics,
-              alpha = input$alpha,
-              cutoff = input$cutoff,
-              sort_opt = input$sort_opt
-            ),
-            message = "Executing Get Statistics for EVENTS/SOC...",
-            detail = "This step should take a while.",
-            min = 0,
-            max = 1,
-            value = 1
-          )
-        }
-      }
       if (input$report == "Volcano") {
         withProgress(message = 'Generating Volcano Plot', value = 0, {
           out <- try(volcano_plot(
@@ -235,13 +166,13 @@ server <- function(input, output, session) {
             xref = as.numeric(input$X_ref)
           ))
         })
+        }
       }
-    }
     if (input$domain == "LB") {
       withProgress(message = 'Generating Edish Plot', value = 0, {
         out <- try(edish(
-          datain = analysis_data(),
-          subset = input$subset,
+          datain = data$data_in,
+          #subset = input$subset,
           xaxisopt = c(
             input$xbreaks,
             input$xlimits,
@@ -285,7 +216,9 @@ server <- function(input, output, session) {
       req(plots$plot_output)
       plotlyOutput("plot_output", width = "auto" , height = "auto") %>%
         withSpinner(type = 5)
-    })
+    })}
+    
+    #reactive statement - insert tesxt in UI conditionally by using text plcaholder
     output$title_UI <- renderText({
       req(plots$plot_output)
       ftnote <- ft_out[1]
@@ -297,6 +230,10 @@ server <- function(input, output, session) {
       return(HTML(ftnote))
     })
   })
+  output$nodata <- reactive({
+ return(nrow(data$data_in))
+  })
+  outputOptions(output, 'nodata', suspendWhenHidden = FALSE)
   ### Definition of 'Obtain Statistics' button UI output -----------------------
   output$obtain_UI <- renderUI({
     req(data$data_in)
@@ -310,7 +247,7 @@ server <- function(input, output, session) {
     req(length(s) > 0)
     test <<- plots$drill$data[as.numeric(s$key), ]
     if (input$domain == "AE") {
-      display <- analysis_data() %>%
+      display <- data$data_in %>%
         select(any_of(
           c(
             "USUBJID",
@@ -337,7 +274,7 @@ server <- function(input, output, session) {
       }
     }
     if (input$domain == "LB") {
-      display <- analysis_data() %>%
+      display <- data$data_in %>%
         select(any_of(
           c(
             "USUBJID",

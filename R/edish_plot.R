@@ -3,15 +3,13 @@
 # 1 Function: Generation of volcano plot along with specifications.
 ################################################################################
 edish <- function(datain,
-                  subset,
                   xaxisopt,
                   yaxisopt,
                   xrefline,
                   yrefline) {
   names(datain) <- toupper(names(datain))
   
-  hy_data = datain %>% filter(eval(parse(text = subset)) &
-                                !TRTVAR %in% c("N/A", "null", ""))
+  hy_data = datain %>% filter(!TRTVAR %in% c("N/A", "null", ""))
   
   hy <- hy_data %>% mutate(maxv = AVAL / ANRHI) %>%
     mutate(PARM = ifelse(

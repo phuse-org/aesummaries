@@ -7,6 +7,7 @@ data_processing<-function(datain,
                           data_source,
                           server_path,
                           data_filter,
+                          data_subset,
                           trtvar,
                           obs_period,
                           obs_residual=NULL){
@@ -95,9 +96,9 @@ data_processing<-function(datain,
   # filter data for ae timeframe
   if (obs_period == "Overall Duration ") { df1 <- df1 %>% filter(STUDYFL == "Y") 
   } else if (obs_period == "Other") { df1 <- df1 %>% filter((AESTDT >= RFSTDTC) & (AESTDT < (RFENDTC + obs_residual))) }
-  df_out2<<-df1
+  #df_out2<<-df1
   }else if(domain=="LB"){
-    df1<<-dsin
+    df1<-dsin %>% filter(eval(parse(text = data_subset)))
   }
   input_df<<-df1
   return(df1)

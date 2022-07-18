@@ -115,7 +115,7 @@ ui <- fluidPage(tabsetPanel(
                              width = 12,
                              style = "font-size: 12px;",
                              textInput("subset", "SUBSET", value =
-                                         "PARAMCD %in% c('AST','ALT','BILI')")
+                                         "PARAMCD%in%c('L00028S','L00030S','L00021S')")
                            ),
                            br(),
                            h6('X Axis Options'),
@@ -378,12 +378,15 @@ ui <- fluidPage(tabsetPanel(
       width = 8,
       fluidRow(column(
         width = 12,
-        div(htmlOutput("title_UI"), style = "font-size: 12px; white-space: pre"),
-        uiOutput("plot_UI")
+        conditionalPanel(condition = 'output.nodata>0',
+                         div(htmlOutput("title_UI"), style = "font-size: 12px; white-space: pre"),
+        uiOutput("plot_UI")),
+        conditionalPanel(condition = 'output.nodata==0',h1('No data to display'))
       )),
       fluidRow(column(
         width = 12,
-        div(htmlOutput("footnote_UI"), style = "font-size: 12px; white-space: pre")
+        conditionalPanel(condition = 'output.nodata>0',
+                         div(htmlOutput("footnote_UI"), style = "font-size: 12px; white-space: pre"))
       )),
       fluidRow(column(
         width = 12, DT::dataTableOutput("plot_drill")
