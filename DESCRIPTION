@@ -3,12 +3,12 @@ Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
 Authors@R: 
-    c(person(given = "Maya",
-             family = "Gans",
+    c(person(given = "",
+             family = "",
              role = c("aut", "cre"),
-             email = "maya.gans@atorusresearch.com"),
-      person(given = "Jeremy",
-             family = "Wildfire",
+             email = ""),
+      person(given = "",
+             family = "",
              role = "aut"))
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
