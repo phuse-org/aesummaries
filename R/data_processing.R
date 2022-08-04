@@ -16,15 +16,15 @@ data_processing<-function(datain,
   # Reading data
   if (data_source=="Local"){
   if (is.null(datain)) return()
-  if(file_ext(datain)=="csv"){
+  if(file_ext(datain)[1]=="csv"){
     #dsin<-fread(datain$datapath)
     dsin<-read.csv(datain$datapath)
   }
-  if(file_ext(datain)=="sas7bdat"){
+  if(file_ext(datain)[1]=="sas7bdat"){
     dsin<-read_sas(datain$datapath)
   }
   }
-  if(file_ext(datain)=="xpt"){
+  if(file_ext(datain)[1]=="xpt"){
     dsin<-read_xpt(datain$datapath)
   }
   if (data_source=="Server"){
