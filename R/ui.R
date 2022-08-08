@@ -63,7 +63,7 @@ ui <- fluidPage(tabsetPanel(
           fluidRow(
             conditionalPanel(condition = 'input.domain=="AE"',
                              selectInput(
-                               'report', 'Report', c("Volcano", "Forest")
+                               'report', 'Report', c("Forest", "Volcano")
                              ))
           ),
           conditionalPanel(condition = 'input.domain=="LB"',
