@@ -311,10 +311,11 @@ server <- function(input, output, session) {
         ifelse(input$domain == "AE", input$report, input$report1),
         Sys.Date(),
         ".",
-        input$fmt
+        ifelse(input$fmt=="Widget","html",input$fmt)
       )
     },
     content = function(file) {
+      if (input$fmt!="Widget"){
       title <-
         ggdraw() + draw_label(
           plots$title,
@@ -418,6 +419,8 @@ server <- function(input, output, session) {
             print(target = file)
         }
       }
-    }
+      }else{
+      saveWidget(plots$ptly,file=file)
+    }}
   )
 }

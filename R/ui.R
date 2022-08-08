@@ -36,7 +36,7 @@ ui <- fluidPage(tabsetPanel(
                                            )))
     ))),
     column(width = 2, wellPanel(div(
-      style = 'height:50px;', fluidRow(column(width = 6, div(
+      style = 'height:80px;', fluidRow(column(width = 6, div(
         downloadButton('dplot', '', align = 'left')
       )),
       column(width =
@@ -44,7 +44,7 @@ ui <- fluidPage(tabsetPanel(
                  radioButtons(
                    inputId = "fmt",
                    label = NULL,
-                   choices = c("pdf", "html", "pptx")
+                   choices = c("pdf", "html", "pptx","Widget")
                  )
                )))
     ))),
@@ -63,7 +63,7 @@ ui <- fluidPage(tabsetPanel(
           fluidRow(
             conditionalPanel(condition = 'input.domain=="AE"',
                              selectInput(
-                               'report', 'Report', c("Forest", "Volcano")
+                               'report', 'Report', c("Volcano", "Forest")
                              ))
           ),
           conditionalPanel(condition = 'input.domain=="LB"',
@@ -381,7 +381,7 @@ ui <- fluidPage(tabsetPanel(
         conditionalPanel(condition = 'output.nodata>0',
                          div(htmlOutput("title_UI"), style = "font-size: 12px; white-space: pre"),
         uiOutput("plot_UI")),
-        conditionalPanel(condition = 'output.nodata==0',h1('No data to display'))
+        conditionalPanel(condition = 'output.nodata==0',h1('No data to display',style = "text-align: center;padding:200px;"))
       )),
       fluidRow(column(
         width = 12,
