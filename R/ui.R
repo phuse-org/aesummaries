@@ -44,7 +44,7 @@ ui <- fluidPage(tabsetPanel(
                  radioButtons(
                    inputId = "fmt",
                    label = NULL,
-                   choices = c("pdf", "html", "pptx","Widget")
+                   choices = c("pdf", "html", "pptx","html(I)")
                  )
                )))
     ))),
