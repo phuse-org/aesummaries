@@ -311,11 +311,11 @@ server <- function(input, output, session) {
         ifelse(input$domain == "AE", input$report, input$report1),
         Sys.Date(),
         ".",
-        ifelse(input$fmt=="Widget","html",input$fmt)
+        ifelse(input$fmt=="html(I)","html",input$fmt)
       )
     },
     content = function(file) {
-      if (input$fmt!="Widget"){
+      if (input$fmt!="html(I)"){
       title <-
         ggdraw() + draw_label(
           plots$title,
