@@ -72,5 +72,5 @@ officer : 0.4.1 htmltools : 0.5.2 epitools : 0.5.10.1 shinyWidgets : 0.6.4 survm
 
 #### AE LB Summaries Application
 
- knitr::include_app("https://rsc.pfizer.com/content/67a30ace-cf44-4f74-afa2-d147826d8426")
+ knitr::include_app("https://")
 
