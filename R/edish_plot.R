@@ -156,7 +156,7 @@ edish <- function(datain,
       y = -0.2,
       size = 20
     ))
-  
+  hy_plot_test<<-sp
   return(list(
     ptly = output,
     plot = sp,

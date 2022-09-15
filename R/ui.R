@@ -19,32 +19,29 @@ trtv <- c(
   'ACTARM',
   'ACTARMCD'
 )
-ui <- fluidPage(tabsetPanel(
-  tabPanel(
-    "AE/LB",
-    fluid = TRUE,
-    column(width = 8, wellPanel(div(
-      style = 'height:20px;', fluidRow(div(
-        style = 'height:20px;', align = "Left", h4("AE/LB Shiny App")
+ui <- fluidPage(
+    column(width = 6, wellPanel(div(
+      style = 'height:15px;', fluidRow(div(
+        style = 'height:15px;', align = "Left", h4("Advanced R Shiny Interactive AE Plots")
       ))
     ),)),
     column(width = 2, wellPanel(div(
-      style = 'height:20px;', fluidRow(div(style = 'height:20px;',
+      style = 'height:15px;', fluidRow(div(style = 'height:15px;',style = "font-size: 10px;",
                                            helpText(
                                              align = "center",
                                              a("Documentation Link", href = "https://github.com/phuse-org/aesummaries/blob/main/README.md")
                                            )))
     ))),
-    column(width = 2, wellPanel(div(
-      style = 'height:80px;', fluidRow(column(width = 6, div(
-        downloadButton('dplot', '', align = 'left')
+    column(width = 4, wellPanel(div(
+      style = 'height:15px;', fluidRow(column(width = 2, div(style="display:inline-block;vertical-align:top;height:5px;",
+        downloadButton('dplot', '', align = 'left',size = "extra-small")
       )),
-      column(width =
-               6, div(
+      column(width = 10,style = "font-size: 10px;", align='left',div(
                  radioButtons(
                    inputId = "fmt",
                    label = NULL,
-                   choices = c("pdf", "html", "pptx","html(I)")
+                   choices = c("pdf", "html", "pptx","Interactive"),
+                   inline=T
                  )
                )))
     ))),
@@ -55,22 +52,15 @@ ui <- fluidPage(tabsetPanel(
         column(
           width = 5,
           style = "font-size: 12px;",
-          selectInput("domain", "Domain", choices = c("AE", "LB"))
+          fluidRow(
+                             selectInput(
+                               'report', 'Report', c("Forest", "Volcano")
+                             )
+          ),
         ),
         column(
           width = 5,
           style = "font-size: 12px;",
-          fluidRow(
-            conditionalPanel(condition = 'input.domain=="AE"',
-                             selectInput(
-                               'report', 'Report', c("Volcano", "Forest")
-                             ))
-          ),
-          conditionalPanel(condition = 'input.domain=="LB"',
-                           selectInput('report1', 'Report', c("Edish")))
-        ),
-        column(
-          width = 12,
           selectInput("trt_var", "Treatment Variable", choices = trtv)
         )
       )),
@@ -108,115 +98,8 @@ ui <- fluidPage(tabsetPanel(
         ))
         
       )),
-      conditionalPanel(condition = 'input.domain=="LB" && output.fileUploaded',
-                       wellPanel(
-                         fluidRow(
-                           column(
-                             width = 12,
-                             style = "font-size: 12px;",
-                             textInput("subset", "SUBSET", value =
-                                         "PARAMCD%in%c('L00028S','L00030S','L00021S')")
-                           ),
-                           br(),
-                           h6('X Axis Options'),
-                           column(
-                             width = 6,
-                             style = "font-size: 12px;",
-                             textInput("xbreaks", "Breaks", value =
-                                         "0.1,1,2,10")
-                           ),
-                           column(
-                             width = 6,
-                             style = "font-size: 12px;",
-                             textInput("xlimits", "Limits", value =
-                                         "0.1,10")
-                           ),
-                           br(),
-                           column(
-                             width = 6,
-                             style = "font-size: 12px;",
-                             textInput("xticklbl", "Tick Label", value =
-                                         "0.1,1,2x ULN,10")
-                           ),
-                           column(
-                             width = 6,
-                             style = "font-size: 12px;",
-                             textInput("xaxislbl", "Axis Label", value =
-                                         "Peak AST or ALT (x ULN)")
-                           ),
-                           br(),
-                           h6('Y Axis Options'),
-                           column(
-                             width = 6,
-                             style = "font-size: 12px;",
-                             textInput("ybreaks", "Breaks", value =
-                                         "0.1,1,3,10")
-                           ),
-                           column(
-                             width = 6,
-                             style = "font-size: 12px;",
-                             textInput("ylimits", "Limits", value =
-                                         "0.1,10")
-                           ),
-                           br(),
-                           column(
-                             width = 6,
-                             style = "font-size: 12px;",
-                             textInput("yticklbl", "Tick Label", value =
-                                         "0.1,1,3x ULN,10")
-                           ),
-                           column(
-                             width = 6,
-                             style = "font-size: 12px;",
-                             textInput("yaxislbl", "Axis Label", value =
-                                         "Peak Bilirubin (x ULN)")
-                           ),
-                           br(),
-                           h6('X Axis Ref Line'),
-                           column(
-                             width = 4,
-                             style = "font-size: 12px;",
-                             textInput("rlxintercept", "Intercept", value =
-                                         "2")
-                           ),
-                           column(
-                             width = 4,
-                             style = "font-size: 12px;",
-                             textInput("rlxcolor", "Color", value =
-                                         "gray30")
-                           ),
-                           column(
-                             width = 4,
-                             style = "font-size: 12px;",
-                             textInput("rlxlinetyp", "Line Type", value =
-                                         "dashed")
-                           ),
-                           br(),
-                           h6('Y Axis Ref Line'),
-                           column(
-                             width = 4,
-                             style = "font-size: 12px;",
-                             textInput("rlyintercept", "Intercept", value =
-                                         "3")
-                           ),
-                           column(
-                             width = 4,
-                             style = "font-size: 12px;",
-                             textInput("rlycolor", "Color", value =
-                                         "gray30")
-                           ),
-                           column(
-                             width = 4,
-                             style = "font-size: 12px;",
-                             textInput("rlylinetyp", "Line Type", value =
-                                         "dashed")
-                           ),
-                           br()
-                           
-                         )
-                       )),
       conditionalPanel(
-        condition = 'input.domain=="AE" && output.fileUploaded',
+        condition = 'output.fileUploaded',
         wellPanel(
           fluidRow(
             column(
@@ -269,7 +152,7 @@ ui <- fluidPage(tabsetPanel(
               selectInput(
                 "summary_by",
                 "Summary By",
-                choices = c("Patients", "Events"),
+                choices = c("Participants"="Patients", "Events"="Events"),
                 width = "75%"
               )
             ),
@@ -297,15 +180,6 @@ ui <- fluidPage(tabsetPanel(
               value = 5
             )
           ),
-          fluidRow(
-            style = "font-size: 12px;",
-            selectInput(
-              "sort_opt",
-              "Sorting Option",
-              choices = c("Ascending Count", "Descending Count", "Alphabetical"),
-              width = "75%"
-            ),
-          ),
           hr(),
           fluidRow(
             style = "font-size: 12px;",
@@ -317,22 +191,60 @@ ui <- fluidPage(tabsetPanel(
             ),
           ),
           hr(),
-          fluidRow(
-            column(
-              width = 6,
-              style = "font-size: 12px;",
-              uiOutput("treatment1_UI"),
-              uiOutput("treatment1_label_UI")
+          conditionalPanel(
+            condition='input.report=="Volcano"',
+            fluidRow(
+              column(
+                width = 6,
+                style = "font-size: 12px;",
+                uiOutput("treatment1_UI"),
+                uiOutput("treatment1_label_UI")
+              ),
+              column(
+                width = 6,
+                style = "font-size: 12px;",
+                uiOutput("treatment2_UI"),
+                uiOutput("treatment2_label_UI")
+              )
             ),
-            column(
-              width = 6,
-              style = "font-size: 12px;",
-              uiOutput("treatment2_UI"),
-              uiOutput("treatment2_label_UI")
-            )
+            hr(),
           ),
-          br(),
-          hr(),
+          conditionalPanel(
+            condition = 'input.report=="Forest"',
+            fluidRow(
+              style = "font-size: 12px;",
+              column(
+                width=6,
+                selectInput(
+                  "sort_opt",
+                  "Sorting Option",
+                  choices = c("Ascending", "Descending", "Alphabetical")
+                )
+              ),
+              column(
+                width=6, 
+                selectInput(
+                  "sort_by",
+                  "Sorting Variable",
+                  choices = c("Count", "Percent", "RiskValue")
+                )
+              )
+            ),
+            hr(),
+            fluidRow(
+              column(
+                width = 6,
+                style = "font-size: 12px;",
+                uiOutput("ctrlgrp_UI")
+              ),
+              column(
+                width = 6,
+                style = "font-size: 12px;",
+                uiOutput("trtgrp_UI")
+              )
+            ),
+            hr()
+          ),
           fluidRow(
             column(
               width = 6,
@@ -340,8 +252,7 @@ ui <- fluidPage(tabsetPanel(
               numericInput(
                 "X_ref",
                 "X-axis Reference Lines",
-                value = 0,
-                width = "75%"
+                value = 0
               )
             ),
             column(
@@ -351,8 +262,7 @@ ui <- fluidPage(tabsetPanel(
                 "pvalue_label",
                 "P-value Transformation",
                 choices = c("None", "-log10"),
-                selected = "None",
-                width = "75%"
+                selected = "None"
               )
             )
           ),
@@ -365,6 +275,18 @@ ui <- fluidPage(tabsetPanel(
               numericInput(
                 "alpha",
                 "Alpha Value(CI)",
+                value = 0.05,
+                min = 0.01,
+                max = 0.1
+              )
+            ),
+            column(
+              align = "center",
+              width = 6,
+              style = "font-size: 12px;",
+              numericInput(
+                "pvalcut",
+                "p Value Cutoff",
                 value = 0.05,
                 min = 0.01,
                 max = 0.1
@@ -391,6 +313,7 @@ ui <- fluidPage(tabsetPanel(
       fluidRow(column(
         width = 12, DT::dataTableOutput("plot_drill")
       ))
-    )
-  )
-))
+    ),
+    column(width=12,wellPanel(textOutput("version_info_UI"),
+                              tableOutput("package_info_UI")))
+)

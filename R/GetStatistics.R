@@ -7,22 +7,32 @@ options(warn = -1)
 GetStatistics_all  = function(data,
                               summary_by,
                               review_by,
-                              treatment1,
-                              treatment2,
+                              ctrlgrp,
+                              trtgrp,
                               statistics,
                               alpha,
                               cutoff,
-                              sort_opt) {
+                              sort_opt,
+                              sort_var) {
   #print
-  
-  if (is.null(treatment1) | is.null(treatment2)) {
+  if (is.null(ctrlgrp) | is.null(trtgrp)) {
     return(NULL)
   }
-  
+  trtgrp=unlist(strsplit(trtgrp,","))
+  #print(paste("Treatment is",trtgrp))
+  getstats1<-data.frame()
+
+  for (t in trtgrp){
+    treatment1=ctrlgrp
+    treatment2=t
+  #print(treatment2)
   ### Filtering based on selected treatment groups -----------------------------
-  data <- data %>% filter(TRTVAR %in% c(treatment1, treatment2))
+  data1 <- data %>% 
+      filter(TRTVAR %in% c(treatment1, treatment2)) %>%
+      mutate(trt_pair=paste0(treatment1," -vs- ",treatment2))
+  
   ## Calculate Totals using ADSL
-  N1_total <- data %>%
+  N1_total <- data1 %>%
     {
       if (summary_by == "Patients")
         drop_na(., RFSTDTC)
@@ -44,7 +54,7 @@ GetStatistics_all  = function(data,
     } %>%
     tally() %>% as.numeric()
   
-  N2_total <- data %>%
+  N2_total <- data1 %>%
     {
       if (summary_by == "Patients")
         drop_na(., RFSTDTC)
@@ -67,20 +77,20 @@ GetStatistics_all  = function(data,
     tally() %>% as.numeric()
   
   
-  if (nrow(data) == 0) {
+  if (nrow(data1) == 0) {
     return(NULL)
   }
   
-  data_summary <- data %>%
+  data_summary <- data1 %>%
     {
       if (review_by == "PT")
-        group_by(., AEDECOD)
+        group_by(., trt_pair,AEDECOD)
       else
         .
     } %>%
     {
       if (review_by == "SOC")
-        group_by(., AEBODSYS)
+        group_by(., trt_pair,AEBODSYS)
       else
         .
     } %>%
@@ -113,9 +123,9 @@ GetStatistics_all  = function(data,
     } %>%
     na.omit()
   
-  PT_N <- data %>%
+  PT_N <- data1 %>%
     filter(!is.na(AEDECOD) & !is.na(RFSTDTC)) %>%
-    group_by(AEDECOD, TRTVAR) %>%
+    group_by(AEDECOD, TRTVAR,trt_pair) %>%
     {
       if (summary_by == "Patients")
         summarise(., N = length(unique((USUBJID))))
@@ -130,9 +140,9 @@ GetStatistics_all  = function(data,
     }
   data_pt <<- PT_N
   
-  SOC_N <- data %>%
+  SOC_N <- data1 %>%
     filter(!is.na(AEDECOD) & !is.na(RFSTDTC)) %>%
-    group_by(AEBODSYS, TRTVAR) %>%
+    group_by(AEBODSYS, TRTVAR,trt_pair) %>%
     {
       if (summary_by == "Patients")
         summarise(., N = length(unique((USUBJID))))
@@ -169,13 +179,13 @@ GetStatistics_all  = function(data,
     result <- data_summary %>%
       {
         if (review_by == "PT")
-          group_by(., AEDECOD)
+          group_by(.,trt_pair, AEDECOD)
         else
           .
       } %>%
       {
         if (review_by == "SOC")
-          group_by(., AEBODSYS)
+          group_by(.,trt_pair, AEBODSYS)
         else
           .
       } %>%
@@ -233,13 +243,13 @@ GetStatistics_all  = function(data,
     result <- data_summary %>%
       {
         if (review_by == "PT")
-          group_by(., AEDECOD)
+          group_by(.,trt_pair, AEDECOD)
         else
           .
       } %>%
       {
         if (review_by == "SOC")
-          group_by(., AEBODSYS)
+          group_by(., trt_pair,AEBODSYS)
         else
           .
       } %>%
@@ -306,14 +316,19 @@ GetStatistics_all  = function(data,
         hover_text = paste0(
           "\n SOC:",
           AEBODSYS,
-          "\n No of ",
-          summary_by,
+          "\n n of ",
+          ifelse(summary_by=="Patients","participants",summary_by),
           "= ",
           ifelse(N1 == 0, N2, N1),
           "\n",
-          statistics,
+          paste(statistics,"(CI)"),
           ":",
-          TEST,
+          paste0(round(TEST, 3),
+            " (",
+            round(TESTCIL, 2),
+            ",",
+            round(TESTCIU, 2),
+            ")"),
           "\n p-value:",
           round(pvalue, 4)
         )
@@ -327,14 +342,19 @@ GetStatistics_all  = function(data,
           AEBODSYS,
           "\n PT:",
           AEDECOD,
-          "\n No of ",
-          summary_by,
+          "\n n of ",
+          ifelse(summary_by=="Patients","participants",summary_by),
           "= ",
           ifelse(N1 == 0, N2, N1),
           "\n",
-          statistics,
+          paste(statistics,"(CI)"),
           ":",
-          TEST,
+          paste0(round(TEST, 3),
+                 " (",
+                 round(TESTCIL, 2),
+                 ",",
+                 round(TESTCIU, 2),
+                 ")"),
           "\n p-value:",
           round(pvalue, 4)
         )
@@ -355,46 +375,53 @@ GetStatistics_all  = function(data,
       else
         .
     }
-  cutoff_events <<- cutoff_result
-  
-  
   if (review_by == "SOC") {
     getstats <- result2 %>% inner_join(cutoff_result, by = c('AEBODSYS'))
   } else if (review_by == "PT") {
     getstats <-
       result2 %>% inner_join(cutoff_result, by = c('AEBODSYS', 'AEDECOD'))
   }
-  getstats <- getstats %>%
+  
+
+  if (nrow(getstats1)==0) {
+    getstats1=getstats
+  }else{
+    getstats1=rbind(getstats1,getstats)
+    }
+  }
+  
+  notctrl <- getstats1 %>% filter(N1==0)
+  getstats1 <- getstats1 %>% ungroup() %>% 
     {
-      if (sort_opt == "Ascending Count")
-        arrange(., N)
-      else
-        .
-    } %>%
-    {
-      if (sort_opt == "Descending Count")
-        arrange(., desc(N))
-      else
-        .
-    } %>%
-    {
-      if (sort_opt == "Alphabetical" &
-          review_by == "PT")
-        arrange(., AEDECOD)
-      else
-        .
-    } %>%
-    {
-      if (sort_opt == "Alphabetical" &
-          review_by == "SOC")
-        arrange(., AEBODSYS)
-      else
+      if (sort_opt == "Ascending"){  
+        if (sort_var=="Count"){
+          arrange(., N1) 
+        }else if(sort_var=="Percent"){
+          arrange(., PCT1)
+        }else if(sort_var=="RiskValue"){
+          arrange(., TEST)
+        }
+      }else if (sort_opt == "Descending"){
+        if (sort_var=="Count"){
+          arrange(., desc(N1)) %>% filter(N1!=0) %>% rbind(notctrl,.)
+        }else if(sort_var=="Percent"){
+          arrange(., desc(PCT1)) %>% filter(N1!=0) %>% rbind(notctrl,.)
+        }else if(sort_var=="RiskValue"){
+          arrange(., desc(TEST))
+        }
+      }else if (sort_opt == "Alphabetical"){
+        if(review_by == "PT"){
+          arrange(., AEDECOD)
+        }else if(review_by == "SOC"){
+          arrange(., AEBODSYS)
+        }
+      }else
         .
     }
   
-  full_set <<- result2
-  cutoff_set <<- getstats
+  full_set <<- getstats1
+  #cutoff_set <<- getstats
   
-  return(getstats)
+  return(getstats1)
   
 }

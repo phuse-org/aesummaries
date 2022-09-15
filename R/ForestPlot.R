@@ -1,52 +1,97 @@
 options(dplyr.summarise.inform = F)
 Forest_Plot <-
   function(dat,
-           groupvar,
            review_by,
            summary_by,
            statistics,
            xlims = c(0, 3),
-           xref = 1) {
-    groupvar = "TRTVAR"
+           xref = 1,
+           pvalcut=0.05) {
+    #Set review by term
     if (review_by == "PT") {
       byterm = "AEDECOD"
     } else if (review_by == "SOC") {
       byterm = "AEBODSYS"
     }
+    #Calculate number by each treatment and store:
+    dat <- dat %>% 
+      mutate(TRTTXT=paste0(TRTVAR," (N=",ifelse(N1==0,N2_Total,N1_Total),")"))
+    groupvar = "TRTTXT"
+    #For height of plot calculation:
     nterm = length(unique(dat[[byterm]]))
-    adjh <- max(nterm * 15, 600) #length of plot
-    #Calculate percentage:
+    adjh <- max(nterm * 20, 600)
+    #Percentage ScatterPlot data preparation:
     dat_out <-
-      dat %>% filter(TEST != Inf) %>% group_by(across(all_of(c(byterm, groupvar)))) %>%
+      dat %>% filter(TEST != Inf) %>% 
+      group_by(across(all_of(c(byterm, groupvar)))) %>%
       mutate(
         pct = ifelse(N1 == 0, PCT2, PCT1),
-        Percentage = paste0(pct, "%"),
+        Percentage = paste0(gsub("Risk.*$", "", 
+                                 hover_text),pct,"%\n",
+                            TRTVAR),
         SOC = AEBODSYS,
         PT = ifelse(review_by == "PT", AEDECOD, "")
       ) %>% arrange(desc(row_number()))
     dat_out[[byterm]] <- fct_inorder(dat_out[[byterm]])
-    #adjw <- ifelse(review_by=="PT",700,900)
-    #Scatterplot of percentage vs preferred term
-    key <- row.names(dat_out)
+    #Plot width:
+    nwid=max(max(dat_out$PCT1),max(dat_out$PCT2))
+    adjw=ifelse(nwid<=40,800,ifelse(nwid<=80,1000,1300))
+    #colors for Scatter Points:
+    ctrl=dat_out$TRTTXT[dat_out$N2==0] %>% unique()
+    trtlevels=unique(dat_out$TRTTXT[order(dat_out$TRTTXT!=ctrl,dat_out$TRTTXT)])
+    trtcols=c("black" ,"royalblue2", "goldenrod" , "orchid3", "brown","pink")
+    trtcols=setNames(trtcols[1:length(trtlevels)],trtlevels)
+    #Shapes for Scatter Points:
+    trtshapes=c(16,17,15,18,19)
+    trtshapes=setNames(trtshapes[1:length(trtlevels)],trtlevels)
+    
+    ##Key for listings:
+    dat_out$key <- row.names(dat_out)
+    
+    ## Significant points above or below control baseline 
+    # to show - or + effect:
+    baseline <- dat_out %>% ungroup() %>% filter(N2==0) %>% 
+      select(all_of(c(byterm,"PCT1"))) %>% distinct() %>% 
+      rename('PBL'='PCT1') 
+    dat_out <- dat_out %>% ungroup() %>% 
+      inner_join(baseline,by=byterm)
+    dat1<<-dat_out
+    #Identifying significant points:
+    hltpts <- dat_out %>% filter(N1==0,pvalue<pvalcut) %>% 
+      mutate(effect=ifelse(PCT2>PBL,"Negative Effect",
+                           ifelse(PCT2<PBL,"Positive Effect",""))) %>% 
+      filter(effect!="")
+    #Color green or red for + and - effects
+    hltfill <- setNames(c("red","green"),c("Negative Effect","Positive Effect"))
+  #To Draw line between each term in all plots:
+    liney=seq(1.5, length(unique(dat_out[[byterm]]))-0.5, 1)
+    
+    ### ScatterPlot creation
     sp = ggplot(
-      dat_out,
+      data=dat_out,
       aes_string(
         x = "pct",
         y = byterm,
         color = groupvar,
         shape = groupvar,
         text = "Percentage",
-        key = "key",
-        soc = "SOC",
-        pt = "PT"
+        key = "key"
       )
     ) +
-      geom_point(size = 1, position = position_dodge(width = NULL)) +
-      scale_color_manual(name = "", values = c("red", "blue")) +
-      scale_shape_manual(name = "", values = c(17, 16)) + theme_bw() +
-      #scale_y_discrete(labels = function(x) str_wrap(x, width = 15))+
+      geom_point(size = 0.9, position = "dodge") +
+      scale_color_manual(name = "", 
+                         values = trtcols) +
+      scale_shape_manual(name = "", values = trtshapes) + 
+      theme_bw() +
       scale_y_discrete() +
+      geom_hline(yintercept=liney,linetype="dotted",
+                 color="black",size=0.2,alpha=0.5)+
       scale_x_continuous(position = "top") +
+      geom_point(data=hltpts,
+                 aes_string(x="pct",y = byterm,fill="effect",
+                            text = "Percentage",key="key")
+                 ,inherit.aes = FALSE,shape=23,size=1.8,stroke=0.2)+
+      scale_fill_manual(name="",values = hltfill)+
       xlab("Percentage") +
       theme(
         panel.background = element_blank(),
@@ -59,38 +104,42 @@ Forest_Plot <-
         axis.text.y = element_blank(),
         plot.margin = unit(c(0, 0, 0, 0), "cm")
       )
-    #for plotly purposes
-    sp1 = sp + theme(legend.position = "bottom", legend.direction = "horizontal")
+
+    #for static:
+    sp1 <- sp + theme(legend.position = "bottom", legend.direction = "horizontal")
+  #For interactive
     if (review_by == "PT") {
       splotly = ggplotly(
         sp,
-        tooltip = c("text", "soc", "pt"),
+        tooltip = c("text"),
         height = adjh,
         source = "plot_output"
       )
     } else{
       splotly = ggplotly(
         sp,
-        tooltip = c("text", "soc"),
+        tooltip = c("text"),
         height = adjh,
         source = "plot_output"
       )
     }
+
+    #Fixing legend with parantheses
+    for (i in 1:length(splotly$x$data)){
+      if (!is.null(splotly$x$data[[i]]$name)){
+splotly$x$data[[i]]$name = sub("\\(","",
+                               str_split(splotly$x$data[[i]]$name,",")[[1]][1])
+}}
     splotly <- splotly %>%
-      layout(xaxis = list(side = "top"))#,tickfont=list(size=10)))
+      layout(xaxis = list(side = "top"))
     
-    #Data for forest plot:
+    
+    ###Prepare Data for forest plot:
     #Risk values
     dat_out <- dat_out %>%
-      mutate(Risk_CI = paste0(
-        round(TEST, 2),
-        " (",
-        round(TESTCIL, 2),
-        ",",
-        round(TESTCIU, 2),
-        ")"
-      ))
+      mutate(hover_text=sub("n of.*Risk","Risk",hover_text))
     #Line/forest plot of risk ratio:
+
     fp = ggplot(
       dat_out,
       aes_string(
@@ -98,17 +147,20 @@ Forest_Plot <-
         x = "TEST",
         xmin = "TESTCIL",
         xmax = "TESTCIU",
-        text = "Risk_CI"
+        text = "hover_text",
+        group="trt_pair",color = "trt_pair"
       )
     ) +
-      geom_errorbarh(height = 0.1, color = "black") +
+      geom_errorbarh(height = 0.1,
+                     position = position_dodgev(height = 0.6),size=0.5) +
       geom_point(shape = 22,
-                 size = 1,
-                 fill = "black") +
+                 size = 0.6,
+                 position = position_dodgev(height = 0.6)) +
       geom_vline(xintercept = xref, linetype = 3) +
-      xlab(statistics) +
+      geom_hline(yintercept=liney,linetype="dotted",color="black",size=0.2,alpha=0.5)+
+      labs(x=statistics,color=NULL)+
       scale_y_discrete() +
-      coord_cartesian(xlim = xlims) +
+      coord_cartesian(xlim = c(0,5)) +
       theme_bw() +
       scale_x_continuous(position = "top") +
       theme(
@@ -122,13 +174,14 @@ Forest_Plot <-
         axis.title.y = element_blank(),
         plot.margin = unit(c(0, 0, 0, 0), "cm")
       )
-    
+
     fplotly = ggplotly(fp,
                        tooltip = c("text"),
                        height = adjh,
                        source = "plot_output") %>%
       layout(xaxis = list(side = "top"))#,tickfont=list(size=10)))
-    
+    ##for download:
+    fp1 = fp + theme(legend.position = "bottom", legend.direction = "horizontal")
     ###Base for tabular data - currently only p value
     base <- ggplot(dat_out, aes_string(y = byterm)) +
       theme(
@@ -154,10 +207,13 @@ Forest_Plot <-
     
     ##Table to display SOC or PT:
     
-    fsize <- ifelse(review_by == "PT", 2.4, 2.2)
+  if(all(dat_out[[byterm]]==toupper(dat_out[[byterm]]))){
+    fsize=2.2
+  }else{fsize=2.4}
     termtable <- base +
       xlab(review_by) +
-      geom_text(aes_string(y = byterm, label = byterm, text = byterm),
+      geom_text(aes_string(y = byterm, 
+                           label = byterm, text = byterm),
                 size = fsize,
                 x = 0) +
       scale_x_continuous(position = "top")
@@ -183,48 +239,50 @@ Forest_Plot <-
         hjust = 0
       ) +
       scale_x_continuous(position = "top")#,limits = c(0,2.5))
-    
-    ##Display P values
+
     ptable <-
-      base + xlab("p-value") + scale_x_continuous(position = "top") +
+      base +  scale_x_discrete(position = "top") +
       geom_text(
-        aes_string(y = byterm, label = "pvalue"),
+        aes_string(x="trt_pair",y = byterm, label = "pvalue",color="trt_pair"),
         size = 2.4,
-        x = 0.3,
         hjust = 0
-      )
+      )+ xlab("p-value") +
+      theme(legend.position="none")
     
     #Plotly P value table
-    tplotly = ggplotly(ptable, height = adjh, source = "plot_output") %>% layout(xaxis =
-                                                                                   list(side = "top")) %>%
-      style(hoverinfo = "none", textposition = "right")
-    
+    tplotly = ggplotly(ptable, height = adjh, 
+                       source = "plot_output",showlegend = F) %>% 
+      layout(xaxis =list(side="top")) %>%
+      style(hoverinfo = "none", textposition = "middle center")
+   #side = "top",title="p-value", showticklabels = FALSE 
     
     ###Combine interactive plots into subplots for display
-    inter_fig = subplot(
+    inter_fig <<- subplot(
       termplotly,
       splotly,
       fplotly,
       tplotly,
-      widths = c(0.2, 0.35, 0.35, 0.1),
+      widths = c(0.22, 0.32, 0.33, 0.13),
       titleX = TRUE,
-      margin = 0.004
+      margin = 0.003
     ) %>%
-      layout(showlegend = T,
+      layout(showlegend = T,width=1100,
              legend = list(
-               orientation = "h",
-               x = 0.2,
-               y = 0,
-               size = 15
+             orientation = "h",
+             x = 0.5,
+             y = -0.1,
+             yanchor="top",
+             xanchor="center",
+             size = 8,font=list(size=8)
              ))#,
     
     inter_fig$x$source <- "plot_output"
+    
     ###Combine for For static ggplot output for download purposes:
-    #relw = ifelse(review_by=="PT",c(2,3.5,3.5,1),c(2.5,3.5,3,1))
     row1 = plot_grid(
       termstat,
       sp + theme(legend.position = "none"),
-      fp,
+      fp+ theme(legend.position = "none"),
       ptable,
       align = "h"
       ,
@@ -232,7 +290,9 @@ Forest_Plot <-
       rel_widths = c(2, 3.5, 3.5, 1)
     )
     #Separate legend from scatterplot:
-    leg = get_legend(sp1)
+    leg1 = get_legend(sp1)
+    leg2=get_legend(fp1)
+    leg=plot_grid(leg1,leg2,nrow=1,rel_widths = c(0.4,0.6))
     #Combine with legend:
     static_fig = plot_grid(
       row1,
@@ -250,7 +310,6 @@ Forest_Plot <-
              TEST,
              TESTCIL,
              TESTCIU,
-             Risk_CI,
              pvalue,
              SOC)
     if (review_by == "PT") {

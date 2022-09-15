@@ -21,20 +21,14 @@ library(plotly) # version: 4.9.1
 library(scales) # version: 1.1.0
 library(shinycssloaders) # version: 0.3
 library(tidyverse)
-library(survival) # version: 3.1-8
-library(survminer) # version: 0.4.6
 library(shinyWidgets)
 library(cowplot)
 library(epitools)
 library(htmltools)
 library(officer)
-# if function conflicts, default dplyr
-#conflict_prefer("first", "dplyr")
+library(ggstance)
 select <- dplyr::select; rename <- dplyr::rename; mutate <- dplyr::mutate; summarize <- dplyr::summarize; arrange <- dplyr::arrange; slice <- dplyr::slice; filter <- dplyr::filter; recode<-dplyr::recode
 style <- plotly::style
-# conflict_prefer("layout", "plotly")
-# conflict_prefer("hidden", "shinyjs")
-# conflict_prefer("dataTableOutput", "DT")
 
 
 ### Source any R Scripts other than ui.R, server.R and global.R ----------------
@@ -48,10 +42,6 @@ source("edish_plot.R")
 ### Definitions of global variables and functions ------------------------------
 # Check that it doesn't match any non-number
 numbers_only <- function(x) !grepl("\\D", x)
-
-# fmt_dcimals <- function(decimals = 0) {
-#   function(x) format(x, nsmall = decimals, scientific = FALSE)
-# }
 
 reverselog_trans <- function(base = exp(1)) {
   trans <- function(x) -log(x, base)

@@ -22,7 +22,6 @@ server <- function(input, output, session) {
     withProgress(
       data$data_in <- data_processing(
         datain = input$analysis_data,
-        domain = input$domain,
         data_source = input$source,
         server_path = input$server_path,
         data_filter = input$ae_filter,
@@ -45,18 +44,9 @@ server <- function(input, output, session) {
       return(!is.null(analysis_data()))
     })
   outputOptions(output, 'fileUploaded', suspendWhenHidden = FALSE)
-  domain <- reactive(input$domain)
-  # observe({
-  #   #only runs for SDTM
-  #   if (!is.null(analysis_data())) {
-  #     data$data_in <- analysis_data()
-  #   }
-  # })
- #print(nrow(data$data_in))
   ### Extract all arms ---------------------------------------------------------
   ARMCD <- reactive({
     req(data$data_in)
-    print('code check')
     return(unique(data$data_in$TRTVAR[data$data_in$TRTVAR != ""]))
   })
   
@@ -72,11 +62,12 @@ server <- function(input, output, session) {
     req(input$summary_by != "Events")
     div(
       style = 'height:100px; width:91%; overflow: scroll',
-      checkboxGroupInput(
+      radioButtons(
         "treatment1",
         "Group A",
         choices = ARMCD(),
-        selected = ARMCD()[1]
+        selected = ARMCD()[1],
+        inline = FALSE
       )
     )
   })
@@ -86,11 +77,12 @@ server <- function(input, output, session) {
     req(input$summary_by != "Events")
     div(
       style = 'height:100px; width:91%; overflow: scroll',
-      checkboxGroupInput(
+      radioButtons(
         "treatment2",
         "Group B",
         choices = setdiff(ARMCD(), input$treatment1),
-        selected = setdiff(ARMCD(), input$treatment1)[1]
+        selected = setdiff(ARMCD(), input$treatment1)[1],
+        inline = FALSE
       )
     )
   })
@@ -100,7 +92,7 @@ server <- function(input, output, session) {
     req(input$summary_by != "Events")
     textInput("treatment1_label",
               "Label for Group A",
-              value = "Unexposed",
+              value = "Control",
               width = "75%")
   })
   
@@ -109,28 +101,54 @@ server <- function(input, output, session) {
     req(input$summary_by != "Events")
     textInput("treatment2_label",
               "Label for Group B",
-              value = "Exposed",
+              value = "Treatment",
               width = "75%")
   })
   
+  output$ctrlgrp_UI <- renderUI({
+    div(
+      style = 'height:100px; width:91%; overflow: scroll',
+      radioButtons(
+        "ctrlgrp",
+        "Control Group",
+        choices = ARMCD(),
+        selected = ARMCD()[1],
+        inline = FALSE
+      )
+    )
+  })
+  
+  output$trtgrp_UI <- renderUI({
+    div(
+      style = 'height:100px; width:91%; overflow: scroll',
+      checkboxGroupInput(
+        "trtgrp",
+        "Treatment Group",
+        choices = setdiff(ARMCD(), input$ctrlgrp),
+        selected = setdiff(ARMCD(), input$ctrlgrp)[1]
+      )
+    )
+  })
   ### An essential step for obtaining statistics right after data uploading and before the generation of plot ------------------------------------
   observeEvent(input$obtain, {
     if (nrow(data$data_in)>0){
-      if (input$domain == "AE") {
       if (input$period == "Other") {
         req(input$period_please_specify)
       }
+      trtxx<-paste(input$trtgrp,collapse=",")
+      print(input$report)
           withProgress(
             data$statistics <- GetStatistics_all(
               data = data$data_in,
               review_by = input$review_by,
               summary_by = input$summary_by,
-              treatment1 = input$treatment1,
-              treatment2 = input$treatment2,
+              ctrlgrp = ifelse(input$report=='Forest',input$ctrlgrp,input$treatment1),
+              trtgrp = ifelse(input$report=='Forest',trtxx,input$treatment2),
               statistics = input$statistics,
               alpha = input$alpha,
               cutoff = input$cutoff,
-              sort_opt = input$sort_opt
+              sort_opt = input$sort_opt,
+              sort_var=input$sort_by
             ),
             message = "Executing Get Statistics for EVENTS/ PT...",
             detail = "This step should take a while.",
@@ -140,7 +158,7 @@ server <- function(input, output, session) {
           )
       if (input$report == "Volcano") {
         withProgress(message = 'Generating Volcano Plot', value = 0, {
-          out <- try(volcano_plot(
+          data$out <- try(volcano_plot(
             data = isolate(data$data_in),
             statistics_data = isolate(data$statistics),
             statistics = input$statistics,
@@ -151,74 +169,47 @@ server <- function(input, output, session) {
             summary_by = input$summary_by,
             pvalue_label = input$pvalue_label,
             treatment1_label = input$treatment1_label,
-            treatment2_label = input$treatment2_label
+            treatment2_label = input$treatment2_label,
+            pvalcut = input$pvalcut
           ))
         })
       } else if (input$report == "Forest") {
         withProgress(message = 'Generating Forest Plot', value = 0, {
-          out <- try(Forest_Plot(
+          data$out <- try(Forest_Plot(
             dat = isolate(data$statistics),
-            groupvar = TRTVAR,
             review_by = input$review_by,
             summary_by = input$summary_by,
             statistics = input$statistics,
             xlims = c(0, 3),
-            xref = as.numeric(input$X_ref)
+            xref = as.numeric(input$X_ref),
+            pvalcut= input$pvalcut
           ))
         })
         }
-      }
-    if (input$domain == "LB") {
-      withProgress(message = 'Generating Edish Plot', value = 0, {
-        out <- try(edish(
-          datain = data$data_in,
-          #subset = input$subset,
-          xaxisopt = c(
-            input$xbreaks,
-            input$xlimits,
-            input$xticklbl,
-            input$xaxislbl
-          ),
-          yaxisopt = c(
-            input$ybreaks,
-            input$ylimits,
-            input$yticklbl,
-            input$yaxislbl
-          ),
-          xrefline = c(input$rlxintercept, input$rlxcolor, input$rlxlinetyp),
-          yrefline = c(input$rlyintercept, input$rlycolor, input$rlylinetyp)
-        ))
-      })
-    }
     ft_out <- title_ftnote(
-      domain = input$domain,
       summary_by = input$summary_by,
       filters = input$ae_filter,
       statistics = input$statistics,
       report = input$report
     )
     
-    plots$plot_output <- out$plot
+    plots$plot_output <- data$out$plot
     if (input$report == "Forest") {
-      plots$n <- out$n
-      plots$drill <- out$drill_plt
-    } else {
-      plots$drill <- out$plot
-    }
+      plots$n <- data$out$n
+    } 
     plots$title <- ft_out[1]
     plots$ft <- ft_out[2]
-    plots$plot_data <- out$data
-    plots$ptly <- out$ptly
+    plots$ptly <- data$out$ptly
     output$plot_output <- renderPlotly({
-      out$ptly
+      data$out$ptly
     })
     output$plot_UI <- renderUI({
       req(plots$plot_output)
-      plotlyOutput("plot_output", width = "auto" , height = "auto") %>%
+      plotlyOutput("plot_output", width = "auto" ,height = "auto")%>%
         withSpinner(type = 5)
     })}
     
-    #reactive statement - insert tesxt in UI conditionally by using text plcaholder
+    #reactive statement - insert text in UI conditionally by using text plcaholder
     output$title_UI <- renderText({
       req(plots$plot_output)
       ftnote <- ft_out[1]
@@ -231,7 +222,8 @@ server <- function(input, output, session) {
     })
   })
   output$nodata <- reactive({
- return(nrow(data$data_in))
+    req(data$data_in)
+    return(nrow(data$data_in))
   })
   outputOptions(output, 'nodata', suspendWhenHidden = FALSE)
   ### Definition of 'Obtain Statistics' button UI output -----------------------
@@ -245,8 +237,11 @@ server <- function(input, output, session) {
   output$plot_drill <- DT::renderDataTable({
     s = event_data("plotly_click", source = "plot_output")
     req(length(s) > 0)
-    test <<- plots$drill$data[as.numeric(s$key), ]
-    if (input$domain == "AE") {
+    if (input$report == "Forest") {
+      test <<- data$out$drill_plt$data[as.numeric(s$key), ]
+    } else {
+      test <<- data$out$plot$data[as.numeric(s$key), ]
+    }
       display <- data$data_in %>%
         select(any_of(
           c(
@@ -272,27 +267,6 @@ server <- function(input, output, session) {
         plot_table = select(test, 'AEBODSYS', 'TRTVAR') %>%
           inner_join(display)
       }
-    }
-    if (input$domain == "LB") {
-      display <- data$data_in %>%
-        select(any_of(
-          c(
-            "USUBJID",
-            "TRTVAR",
-            "PARAM",
-            "PARAMCD",
-            "AVAL",
-            "ADT",
-            "ANRIND",
-            "ANRHI",
-            "ANRLO",
-            "AVISIT",
-            "APBFL"
-          )
-        ), starts_with("ANL0"))
-      plot_table = select(test, 'USUBJID', 'TRTVAR') %>%
-        inner_join(display)
-    }
     plot_table <- plot_table %>% distinct()
     datatable(
       plot_table,
@@ -308,14 +282,14 @@ server <- function(input, output, session) {
   output$dplot <- downloadHandler(
     filename = function() {
       paste0(
-        ifelse(input$domain == "AE", input$report, input$report1),
+        input$report,
         Sys.Date(),
         ".",
-        ifelse(input$fmt=="html(I)","html",input$fmt)
+        ifelse(input$fmt=="Interactive","html",input$fmt)
       )
     },
     content = function(file) {
-      if (input$fmt!="html(I)"){
+      if (input$fmt!="Interactive"){
       title <-
         ggdraw() + draw_label(
           plots$title,
@@ -340,7 +314,6 @@ server <- function(input, output, session) {
           rel_heights = c(0.05, 0.9, 0.1),
           ncol = 1
         )
-      #pdfout <- add_sub(pdfout1,plots$ft,y=0.5,x=0.05,hjust=0,size=10)
       if (input$fmt == "pdf") {
         #Save to pdf
         if (input$report == "Forest") {
@@ -356,7 +329,7 @@ server <- function(input, output, session) {
             limitsize = F
           )
         }
-        if (input$report %in% c("Volcano", "Edish")) {
+        if (input$report %in% c("Volcano")) {
           ggsave(
             file,
             pdfout,
@@ -382,16 +355,6 @@ server <- function(input, output, session) {
             pdfout,
             height = ploth,
             width = w,
-            dpi = 100,
-            units = "in"
-          )
-        }
-        if (input$report == "Edish") {
-          ggsave(
-            tf1,
-            pdfout,
-            height = 10,
-            width = 12,
             dpi = 100,
             units = "in"
           )
@@ -423,4 +386,15 @@ server <- function(input, output, session) {
       saveWidget(plots$ptly,file=file)
     }}
   )
+  output$version_info_UI <- renderText({
+    verinfo<-sessionInfo()
+    return(HTML(paste0("App devlopment software and packages details: "," \\n ",
+                       sessionInfo()$R.version$version.string)
+                ))
+  })
+  output$package_info_UI<-renderUI({x<-names(sessionInfo()$otherPkgs)
+  return(lapply(1:length(x),
+         function(i){
+           c(paste0(x[i]," : ",packageVersion(x[i])))
+         }))})
 }

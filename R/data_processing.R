@@ -3,7 +3,6 @@
 # This R Script performs all data processing
 ################################################################################
 data_processing<-function(datain,
-                          domain,
                           data_source,
                           server_path,
                           data_filter,
@@ -12,12 +11,11 @@ data_processing<-function(datain,
                           obs_period,
                           obs_residual=NULL){
   
-  
+  print(data_filter)
   # Reading data
   if (data_source=="Local"){
   if (is.null(datain)) return()
   if(file_ext(datain)[1]=="csv"){
-    #dsin<-fread(datain$datapath)
     dsin<-read.csv(datain$datapath)
   }
   if(file_ext(datain)[1]=="sas7bdat"){
@@ -35,7 +33,6 @@ data_processing<-function(datain,
   
   names(dsin)[names(dsin) == toupper(trtvar)] <- "TRTVAR"
   
-  if(domain=="AE"){
     date_formats <- c('%d%b%Y', '%Y-%m-%d','%m/%d/%Y %H:%M')
     if ("AESTDT" %in% names(dsin)){
       df1 <- dsin %>% mutate(AESTDT=as.Date(AESTDT, tryFormats = date_formats, optional = F))
@@ -96,10 +93,6 @@ data_processing<-function(datain,
   # filter data for ae timeframe
   if (obs_period == "Overall Duration ") { df1 <- df1 %>% filter(STUDYFL == "Y") 
   } else if (obs_period == "Other") { df1 <- df1 %>% filter((AESTDT >= RFSTDTC) & (AESTDT < (RFENDTC + obs_residual))) }
-  #df_out2<<-df1
-  }else if(domain=="LB"){
-    df1<-dsin %>% filter(eval(parse(text = data_subset)))
-  }
   input_df<<-df1
   return(df1)
 }

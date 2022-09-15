@@ -14,7 +14,8 @@ volcano_plot <- function(data,
                          summary_by,
                          pvalue_label,
                          treatment1_label,
-                         treatment2_label)
+                         treatment2_label,
+                         pvalcut)
 {
   
   ### Construction of volcano plot ---------------------------------------------
@@ -38,29 +39,17 @@ volcano_plot <- function(data,
   key <- row.names(statistics_data)
   
   # Error when there are no adjusted p-values <= 0.05 so remove FDR adjusted P when no adjusted p <= 0.05---------------------
-  check_sig <- statistics_data %>% group_by() %>% filter(adjpvalue<=0.05)
+  check_sig <- statistics_data %>% group_by() %>% filter(adjpvalue<=pvalcut)
+  p <- ggplot(statistics_data, aes(TEST, pvalue, text = hover_text, key = key, fill=AEBODSYS)) + # color code by SOC
+    geom_point(aes(size=N), pch=21, alpha=0.5)
   
   if (nrow(check_sig) !=0) {
-    
-    pvalue_adj0.05 = (statistics_data %>% group_by() %>% filter(adjpvalue<=0.05) %>% arrange(desc(adjpvalue)) %>% slice(1))$pvalue
-    
-    p <- ggplot(statistics_data, aes(TEST, pvalue, label = hover_text, key = key, fill=AEBODSYS)) + # color code by SOC
-      geom_point(aes(size=N), pch=21, alpha=0.5,) + 
-      geom_hline(yintercept = 0.05, color = 'grey30', linetype = "dashed") +
-      geom_hline(yintercept = pvalue_adj0.05, color = 'grey30', linetype = "dotted") +
-      geom_vline(xintercept = ifelse(grepl("Ratio",statistics),1,0), color = 'grey30', linetype = "dashed") +
-      geom_vline(xintercept = ifelse(grepl("Ratio",statistics),1,0)+c(-X_ref,X_ref), color = 'grey30', linetype = "dashed") +
-      theme_classic() +
-      background_grid(major = "xy", minor = "none", color.major="grey92")+
-      guides(fill=guide_legend("System Organ Class",title.position="top"),size="none")+
-      theme(legend.position = "bottom",legend.text=element_text(size=6))+
-      scale_size_continuous(range = c(1, 8)) #+ ylim(0,1) #change
-    
-  } else{
-    
-    p <- ggplot(statistics_data, aes(TEST, pvalue, label = hover_text, key = key, fill=AEBODSYS)) + # color code by SOC
-      geom_point(aes(size=N), pch=21, alpha=0.5) + 
-      geom_hline(yintercept = 0.05, color = 'grey30', linetype = "dashed") +
+    pvalue_adj = (statistics_data %>% group_by() %>% filter(adjpvalue<=pvalcut) %>% arrange(desc(adjpvalue)) %>% slice(1))$pvalue
+  p <- p +
+      geom_hline(yintercept = pvalue_adj, color = 'grey30', linetype = "dotted")
+  } 
+    p <- p + 
+      geom_hline(yintercept = pvalcut, color = 'grey30', linetype = "dashed") +
       geom_vline(xintercept = ifelse(grepl("Ratio",statistics),1,0), color = 'grey30', linetype = "dashed") +
       geom_vline(xintercept = ifelse(grepl("Ratio",statistics),1,0)+c(-X_ref,X_ref), color = 'grey30', linetype = "dashed") +
       theme_classic() +
@@ -68,7 +57,7 @@ volcano_plot <- function(data,
       guides(fill=guide_legend(title = "System Organ Class",title.position="top"),size="none")+
       theme(legend.position = "bottom",legend.text=element_text(size=6))+
       scale_size_continuous(range = c(1, 8))  
-  }
+
   
   ### P value transformation-------------------------------------------------------------------------------
   if (pvalue_label=="-log10"){
@@ -100,7 +89,7 @@ volcano_plot <- function(data,
     theme(plot.title = element_text(hjust = 0.5))
   
   
-  output = ggplotly(p,tooltip = c("label"), source="plot_output",height=800)# %>%
+  output = ggplotly(p,tooltip = c("text"), source="plot_output",height=800)# %>%
   output$x$layout$legend$font$size=8.5 # change legend text size
   output$x$layout$legend$orientation="h"
   output$x$layout$legend$x= 0.4
