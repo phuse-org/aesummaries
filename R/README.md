@@ -62,7 +62,7 @@ We can download the current plot in pdf, html or pptx format by the clicking the
 •	Check whether given subsets/filters are present in data
 •	When the plot does not have any data input – i.e the subset given by user is not present in the data, this message will be displayed to alert the user:
 
-image
+![image](https://user-images.githubusercontent.com/58828408/191068564-f6387e0c-12e7-4951-a009-396dcf4b4257.png)
 
 In this example, the data does not contain the Parameters mentioned in the SUBSET input.
 
