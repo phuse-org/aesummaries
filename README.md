@@ -3,8 +3,8 @@
 # Advanced R Shiny Interactive AE Plots
 PHUSE Forest Plot Project Repository
 
-### Overview of AE_LB Shiny Application:
-    The purpose of this AE/LB Application is to visualize the AE (Adverse Event) and LB(Laboratory) dataset through Interactive R shiny Graphs (AE -Volcano and Forest plot/ LB – eDISH Plot). In this AE/LB Application, we can generate the plots which will be according to the filters that we select. Since we have many table of tables to visualize certain statistics and measures for AE and LB, we can simply use this app to display plots for all the combinations of treatments.
+### Overview of AE R Shiny Application:
+    The purpose of this AE Application is to visualize the AE (Adverse Event) dataset through Interactive R shiny Graphs (AE -Volcano and Forest plot). In this AE Application, we can generate the plots which will be according to the filters that we select. Since we have many table of tables to visualize certain statistics and measures for AE, we can simply use this app to display plots for all the combinations of treatments.
 
 ![image](https://user-images.githubusercontent.com/65352723/190404121-28d475cc-937a-49e4-aacc-754b1bb84cc9.png)
 
