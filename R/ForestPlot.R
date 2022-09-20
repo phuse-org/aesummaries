@@ -33,9 +33,11 @@ Forest_Plot <-
         PT = ifelse(review_by == "PT", AEDECOD, "")
       ) %>% arrange(desc(row_number()))
     dat_out[[byterm]] <- fct_inorder(dat_out[[byterm]])
-    #Plot width:
-    nwid=max(max(dat_out$PCT1),max(dat_out$PCT2))
-    adjw=ifelse(nwid<=40,800,ifelse(nwid<=80,1000,1300))
+    
+    ##-Dynamic Plot width - review to update later:
+    ##-nwid=max(max(dat_out$PCT1),max(dat_out$PCT2))
+    ##-adjw=ifelse(nwid<=40,600,ifelse(nwid<=60,800,ifelse(nwid<=80,1000,1300)))
+    
     #colors for Scatter Points:
     ctrl=dat_out$TRTTXT[dat_out$N2==0] %>% unique()
     trtlevels=unique(dat_out$TRTTXT[order(dat_out$TRTTXT!=ctrl,dat_out$TRTTXT)])
@@ -266,7 +268,7 @@ splotly$x$data[[i]]$name = sub("\\(","",
       titleX = TRUE,
       margin = 0.003
     ) %>%
-      layout(showlegend = T,width=1100,
+      layout(showlegend = T,width=1300,
              legend = list(
              orientation = "h",
              x = 0.5,
