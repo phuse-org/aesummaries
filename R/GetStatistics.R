@@ -11,7 +11,7 @@ GetStatistics_all  = function(data,
                               trtgrp,
                               statistics,
                               alpha,
-                              cutoff,
+                              cutoff=NA,
                               sort_opt,
                               sort_var) {
   #print
@@ -286,6 +286,8 @@ GetStatistics_all  = function(data,
   }
   risk_results <<- result
   ### Integration of data for the purpose of graph & listing presentation ------
+  
+
   result1 <- result %>% group_by() %>%
     #inner_join(data %>% select(TRTVAR, AEBODSYS) %>% unique()) %>%
     {
@@ -308,7 +310,13 @@ GetStatistics_all  = function(data,
       PCT2 = round((((TRTVAR %in% treatment2) * N
       ) / N2_total) * 100, 2),
       pvalue = TESTP,
-      adjpvalue = p.adjust(pvalue, method = "fdr")
+      adjpvalue = p.adjust(pvalue, method = "fdr"),
+      RiskCI=paste0(round(TEST, 3),
+                    " (",
+                    round(TESTCIL, 2),
+                    ",",
+                    round(TESTCIU, 2),
+                    ")")
     )
   if (review_by == "SOC") {
     result2 <- result1 %>%
@@ -323,12 +331,7 @@ GetStatistics_all  = function(data,
           "\n",
           paste(statistics,"(CI)"),
           ":",
-          paste0(round(TEST, 3),
-            " (",
-            round(TESTCIL, 2),
-            ",",
-            round(TESTCIU, 2),
-            ")"),
+          RiskCI,
           "\n p-value:",
           round(pvalue, 4)
         )
@@ -349,20 +352,19 @@ GetStatistics_all  = function(data,
           "\n",
           paste(statistics,"(CI)"),
           ":",
-          paste0(round(TEST, 3),
-                 " (",
-                 round(TESTCIL, 2),
-                 ",",
-                 round(TESTCIU, 2),
-                 ")"),
+          RiskCI,
           "\n p-value:",
           round(pvalue, 4)
         )
       )
   }
-  
+  if (!is.na(cutoff)){
   cutoff_result <-
-    result2 %>% filter(PCT1 > cutoff | PCT2 > cutoff) %>%
+    result2 %>% filter(PCT1 > cutoff | PCT2 > cutoff)
+  }else{
+    cutoff_result <- result2
+    } 
+  cutoff_result <- cutoff_result %>%
     {
       if (review_by == "SOC")
         distinct(., AEBODSYS)
@@ -375,6 +377,7 @@ GetStatistics_all  = function(data,
       else
         .
     }
+  
   if (review_by == "SOC") {
     getstats <- result2 %>% inner_join(cutoff_result, by = c('AEBODSYS'))
   } else if (review_by == "PT") {

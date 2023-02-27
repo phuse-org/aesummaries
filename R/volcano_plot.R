@@ -89,7 +89,11 @@ volcano_plot <- function(data,
     theme(plot.title = element_text(hjust = 0.5))
   
   
-  output = ggplotly(p,tooltip = c("text"), source="plot_output",height=800)# %>%
+  output = ggplotly(p,tooltip = c("text"), source="plot_output",height=800,width=800)%>%
+    layout(legend=list(fontsize=8.5,
+                       orientation="h",
+                       x=0.4,
+                       y=-0.2))
   output$x$layout$legend$font$size=8.5 # change legend text size
   output$x$layout$legend$orientation="h"
   output$x$layout$legend$x= 0.4

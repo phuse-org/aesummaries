@@ -3,8 +3,8 @@
 # Advanced R Shiny Interactive AE Plots
 PHUSE Forest Plot Project Repository
 
-### Overview of Advanced R Shiny Interactive AE Plots Shiny Application:
-    The purpose of this AE Application is to visualize the AE (Adverse Event) ADAM dataset through Interactive R shiny Graphs (AE -Volcano and Forest plot). In this AEApplication, we can generate the plots which will be according to the filters that we select. Since we have many table of tables to visualize certain statistics and measures for AE, we can simply use this app to display plots for all the combinations of treatments.
+### Overview of AE Summaries Shiny Application:
+    The purpose of this Application is to visualize the AE (Adverse Event) dataset through Interactive R shiny Graphs (Volcano and Forest plot). In this Application, we can generate the plots which will be according to the filters that we select. Since we have many table of tables to visualize certain statistics and measures for AE, we can simply use this app to display plots for all the combinations of treatments.
 
 ![image](https://user-images.githubusercontent.com/65352723/190404121-28d475cc-937a-49e4-aacc-754b1bb84cc9.png)
 
@@ -62,7 +62,7 @@ We can download the current plot in pdf, html or pptx format by the clicking the
 •	Check whether given subsets/filters are present in data
 •	When the plot does not have any data input – i.e the subset given by user is not present in the data, this message will be displayed to alert the user:
 
-![image](https://user-images.githubusercontent.com/58828408/191068564-f6387e0c-12e7-4951-a009-396dcf4b4257.png)
+![image](https://user-images.githubusercontent.com/65352723/183668648-521a206c-81a5-4150-a537-9b9faa53072e.png)
 
 In this example, the data does not contain the Parameters mentioned in the SUBSET input.
 
@@ -72,5 +72,5 @@ officer : 0.4.1 htmltools : 0.5.2 epitools : 0.5.10.1 shinyWidgets : 0.6.4 survm
 
 #### AE Summaries Application
 
- knitr::include_app("https://")
+ knitr::include_app("https://rsc.pfizer.com/content/67a30ace-cf44-4f74-afa2-d147826d8426")
 

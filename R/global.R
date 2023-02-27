@@ -5,9 +5,6 @@
 ################################################################################
 
 ### Declaration of required packages for running the Shiny App smoothly --------
-#install.packages(c("conflicted",
-#                  "fmsb",
-#                  "shinyWidgets" ),repos="https://rspm.pfizer.com/cran/2020-12-07",lib = .libPaths()[2])
 
 library(shiny) # version: 1.4.0
 library(shinyjs) # version: 1.1
@@ -27,7 +24,13 @@ library(epitools)
 library(htmltools)
 library(officer)
 library(ggstance)
-select <- dplyr::select; rename <- dplyr::rename; mutate <- dplyr::mutate; summarize <- dplyr::summarize; arrange <- dplyr::arrange; slice <- dplyr::slice; filter <- dplyr::filter; recode<-dplyr::recode
+library(flextable)
+library(ftExtra)
+library(knitr)
+library(markdown)
+library(shinydashboard)
+
+#select <- dplyr::select; rename <- dplyr::rename; mutate <- dplyr::mutate; summarize <- dplyr::summarize; arrange <- dplyr::arrange; slice <- dplyr::slice; filter <- dplyr::filter; recode<-dplyr::recode
 style <- plotly::style
 
 
@@ -37,17 +40,10 @@ source("volcano_plot.R")
 source("GetStatistics.R")
 source("RiskDiff.R")
 source("title_ftnote.R")
-source("ForestPlot.R")
-source("edish_plot.R")
-### Definitions of global variables and functions ------------------------------
-# Check that it doesn't match any non-number
-numbers_only <- function(x) !grepl("\\D", x)
+source("forest_plot.R")
+source("adaeT9.R")
+source("server.R")
+source("util.R")
+source("event_analysis.R")
 
-reverselog_trans <- function(base = exp(1)) {
-  trans <- function(x) -log(x, base)
-  inv <- function(x) base^(-x)
-  trans_new(paste0("reverselog-", format(base)), trans, inv, 
-            log_breaks(base = base), 
-            domain = c(1e-100, Inf))
-}
 
