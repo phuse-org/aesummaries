@@ -34,7 +34,7 @@ library(ggstance)
 library(scales)
 source("../R/data_processing.R")
 source("../R/GetStatistics.R")
-source("../R/RiskDiff.R")
+#source("../R/RiskDiff.R")
 source("../R/forest_plot.R")
 source("../R/title_ftnote.R")
 ```
