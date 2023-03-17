@@ -11,8 +11,8 @@ params:
   obs_residual: 28
   review_by: "PT"
   summary_by: "Patients"
-  ctrlgrp: "Placebo"
-  trtgrp: "Xanomeline High Dose"
+  ctrlgrp: "Xanomeline High Dose"
+  trtgrp: "Xanomeline Low Dose,Placebo"
   alpha: 0.05
   cutoff: 5
   sort_opt: "Ascending"
