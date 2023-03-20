@@ -18,7 +18,7 @@ params:
   sort_opt: "Ascending"
   sort_var: "Count"
   statistics: "Risk Ratio"
-  xlims: c(0, 3)
+  risk_axis_scale: "log10"
   xref: 0
   pvalcut: 0.05
 ---
@@ -70,7 +70,7 @@ goutput <- Forest_Plot(
   review_by = params$review_by,
   summary_by = params$summary_by,
   statistics = params$statistics,
-  xlims = c(0, 3),
+  scale_trans=params$risk_axis_scale,
   xref =params$xref,
   pvalcut = params$pvalcut
 )
