@@ -202,7 +202,7 @@ ui <- fluidPage(
                   ),
                   hr(),
                   column(
-                    width=8,
+                    width=6,
                     div(
                       align = "center",
                       style = "font-size:12px;",
@@ -211,7 +211,7 @@ ui <- fluidPage(
                   ),
                   hr(),
                   column(
-                    width=12,
+                    width=6,
                     div(
                       style = "font-size: 12px;",
                       selectInput(
@@ -240,61 +240,71 @@ ui <- fluidPage(
                   ),
                   conditionalPanel(
                     condition = 'input.report != "Volcano"',
-                    div(
-                      style = "font-
-            size: 12px;",
-            column(
-              width=6,
-              selectInput(
-                "sort_opt",
-                "Sorting Option",
-                choices = c("Ascending", "Descending", "Alphabetical")
-              )
-            ),
-            column(
-              width=6, 
-              selectInput(
-                "sort_by",
-                "Sorting Variable",
-                choices = c("Count", "Percent", "RiskValue")
-              )
-            )
-                    ),
-            hr(),
-            column(
-              width = 6,
-              style = "font-size: 12px;",
-              uiOutput("ctrlgrp_UI")
-            ),
-            column(
-              width = 6,
-              style = "font-size: 12px;",
-              uiOutput("trtgrp_UI")
-            ),
-            hr(),
+                    column(
+                      width=6, 
+                      style = "font-size: 12px;",
+                      selectInput(
+                        "riskScale",
+                        "Risk Axis Scale",
+                        choices = c("Log10","Identity","Log2")
+                      )
+                    )
                   ),
-            column(
-              width = 6,
-              style = "font-size: 12px;",
-              numericInput("X_ref","X-axis Reference Lines",value = 0)
-            ),
-            column(
-              width = 6,
-              style = "font-size: 12px;",
-              selectInput("pvalue_label","P-value Transformation",choices = c("None", "-log10"),selected = "None")
-            ),
-            br(),
-            column(
-              align = "center",
-              width = 6,
-              style = "font-size: 12px;",
-              numericInput("alpha","Alpha Value(CI)",value = 0.05,min = 0.01,max = 0.1)
-            ),
-            column(
-              width = 6,
-              style = "font-size: 12px;",
-              numericInput("pvalcut","p Value Cutoff",value = 0.05,min = 0.01,max = 0.1)
-            )
+                  conditionalPanel(
+                  condition = 'input.report != "Volcano"',
+                    column(
+                      width=6,
+                      style = "font-size: 12px;",
+                      selectInput(
+                        "sort_opt",
+                        "Sorting Option",
+                        choices = c("Ascending", "Descending", "Alphabetical")
+                      )
+                    ),
+                    column(
+                      width=6,
+                      style = "font-size: 12px;",
+                      selectInput(
+                        "sort_by",
+                        "Sorting Variable",
+                        choices = c("Count", "Percent", "RiskValue")
+                      )
+                    ),
+                  hr(),
+                  column(
+                    width = 6,
+                    style = "font-size: 12px;",
+                    uiOutput("ctrlgrp_UI")
+                  ),
+                  column(
+                    width = 6,
+                    style = "font-size: 12px;",
+                    uiOutput("trtgrp_UI")
+                  ),
+                  hr(),
+                        ),
+                  column(
+                    width = 6,
+                    style = "font-size: 12px;",
+                    numericInput("X_ref","X-axis Reference Lines",value = 0)
+                  ),
+                  column(
+                    width = 6,
+                    style = "font-size: 12px;",
+                    selectInput("pvalue_label","P-value Transformation",choices = c("None", "-log10"),selected = "None")
+                  ),
+                  br(),
+                  column(
+                    align = "center",
+                    width = 6,
+                    style = "font-size: 12px;",
+                    numericInput("alpha","Alpha Value(CI)",value = 0.05,min = 0.01,max = 0.1)
+                  ),
+                  column(
+                    width = 6,
+                    style = "font-size: 12px;",
+                    numericInput("pvalcut","p Value Cutoff",value = 0.05,min = 0.01,max = 0.1)
+                  )
                 )
               ), # End of Volcano and forest plot inputs
             # Begin of ADAE table input

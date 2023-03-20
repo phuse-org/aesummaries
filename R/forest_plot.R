@@ -4,7 +4,7 @@ Forest_Plot <-
            review_by,
            summary_by,
            statistics,
-           xlims = c(0, 3),
+           scale_trans="identity",
            xref = 1,
            pvalcut=0.05) {
     #Set review by term
@@ -41,7 +41,7 @@ Forest_Plot <-
     #colors for Scatter Points:
     ctrl=dat_out$TRTTXT[dat_out$N2==0] %>% unique()
     trtlevels=unique(dat_out$TRTTXT[order(dat_out$TRTTXT!=ctrl,dat_out$TRTTXT)])
-    trtcols=c("black" ,"royalblue2", "goldenrod" , "orchid3", "brown","pink")
+    trtcols=c("black" ,"royalblue2", "goldenrod" , "orchid3", "brown","pink","aquamarine1","tan4","skyblue1")
     trtcols=setNames(trtcols[1:length(trtlevels)],trtlevels)
     #Shapes for Scatter Points:
     trtshapes=c(16,17,15,18,19)
@@ -65,7 +65,7 @@ Forest_Plot <-
       filter(effect!="")
     #Color green or red for + and - effects
     hltfill <- setNames(c("red","green"),c("Significantly Higher","Significantly Lower"))
-  #To Draw line between each term in all plots:
+    #To Draw line between each term in all plots:
     liney=seq(1.5, length(unique(dat_out[[byterm]]))-0.5, 1)
     
     ### ScatterPlot creation
@@ -106,10 +106,10 @@ Forest_Plot <-
         axis.text.y = element_blank(),
         plot.margin = unit(c(0, 0, 0, 0), "cm")
       )
-
+    
     #for static:
     sp1 <- sp + theme(legend.position = "bottom", legend.direction = "horizontal")
-  #For interactive
+    #For interactive
     if (review_by == "PT") {
       splotly = ggplotly(
         sp,
@@ -125,13 +125,13 @@ Forest_Plot <-
         source = "plot_output"
       )
     }
-
+    
     #Fixing legend with parantheses
     for (i in 1:length(splotly$x$data)){
       if (!is.null(splotly$x$data[[i]]$name)){
-splotly$x$data[[i]]$name = sub("\\(","",
-                               str_split(splotly$x$data[[i]]$name,",")[[1]][1])
-}}
+        splotly$x$data[[i]]$name = sub("\\(","",
+                                       str_split(splotly$x$data[[i]]$name,",")[[1]][1])
+      }}
     splotly <- splotly %>%
       layout(xaxis = list(side = "top"))
     
@@ -140,8 +140,13 @@ splotly$x$data[[i]]$name = sub("\\(","",
     #Risk values
     dat_out <- dat_out %>%
       mutate(hover_text=sub("n of.*Risk","Risk",hover_text))
+    
+    #X Limits - max risk rounded up to the nearest 0.5 
+    xlims <- c(0,plyr::round_any(max(dat_out$TEST),0.5,f=ceiling))
+    
+    
     #Line/forest plot of risk ratio:
-
+    
     fp = ggplot(
       dat_out,
       aes_string(
@@ -162,9 +167,7 @@ splotly$x$data[[i]]$name = sub("\\(","",
       geom_hline(yintercept=liney,linetype="dotted",color="black",size=0.2,alpha=0.5)+
       labs(x=statistics,color=NULL)+
       scale_y_discrete() +
-      coord_cartesian(xlim = c(0,5)) +
       theme_bw() +
-      scale_x_continuous(position = "top") +
       theme(
         panel.background = element_blank(),
         panel.border = element_blank(),
@@ -176,7 +179,13 @@ splotly$x$data[[i]]$name = sub("\\(","",
         axis.title.y = element_blank(),
         plot.margin = unit(c(0, 0, 0, 0), "cm")
       )
-
+    
+    if (str_detect(scale_trans,"log")){
+      fp <- fp +scale_x_continuous(position = "top",trans = scale_trans)
+    }else{
+      fp <- fp + scale_x_continuous(position = "top")+
+        coord_cartesian(xlim = xlims)
+    }
     fplotly = ggplotly(fp,
                        tooltip = c("text"),
                        height = adjh,
@@ -209,9 +218,9 @@ splotly$x$data[[i]]$name = sub("\\(","",
     
     ##Table to display SOC or PT:
     
-  if(all(dat_out[[byterm]]==toupper(dat_out[[byterm]]))){
-    fsize=2.2
-  }else{fsize=2.4}
+    if(all(dat_out[[byterm]]==toupper(dat_out[[byterm]]))){
+      fsize=2.2
+    }else{fsize=2.4}
     termtable <- base +
       xlab(review_by) +
       geom_text(aes_string(y = byterm, 
@@ -241,7 +250,7 @@ splotly$x$data[[i]]$name = sub("\\(","",
         hjust = 0
       ) +
       scale_x_continuous(position = "top")#,limits = c(0,2.5))
-
+    
     ptable <-
       base +  scale_x_discrete(position = "top") +
       geom_text(
@@ -269,12 +278,12 @@ splotly$x$data[[i]]$name = sub("\\(","",
     ) %>%
       layout(showlegend = T,width=1300,
              legend = list(
-             orientation = "h",
-             x = 0.5,
-             y = -0.1,
-             yanchor="top",
-             xanchor="center",
-             size = 8,font=list(size=8)
+               orientation = "h",
+               x = 0.5,
+               y = -0.1,
+               yanchor="top",
+               xanchor="center",
+               size = 8,font=list(size=8)
              ))#,
     print("check 2")
     inter_fig$x$source <- "plot_output"

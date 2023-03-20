@@ -229,7 +229,7 @@ server <- function(input, output, session) {
 
       if (input$report == "Volcano") {
         withProgress(message = "Generating Volcano Plot", value = 0, {
-          data$goutput <- try(volcano_plot(
+          data$goutput <- volcano_plot(
             data = isolate(data$data_in),
             statistics_data = isolate(data$statistics),
             statistics = input$statistics,
@@ -242,7 +242,7 @@ server <- function(input, output, session) {
             treatment1_label = input$treatment1_label,
             treatment2_label = input$treatment2_label,
             pvalcut = input$pvalcut
-          ))
+          )
 
           data$toutput <- try(
             adaeT9(
@@ -266,15 +266,15 @@ server <- function(input, output, session) {
         })
       } else if (input$report == "Forest") {
         withProgress(message = "Generating Forest Plot", value = 0, {
-          data$goutput <- try(Forest_Plot(
-            dat = isolate(data$statistics),
+          data$goutput <- Forest_Plot(
+            dat = data$statistics,
             review_by = input$review_by,
             summary_by = input$summary_by,
             statistics = input$statistics,
-            xlims = c(0, 3),
             xref = as.numeric(input$X_ref),
-            pvalcut = input$pvalcut
-          ))
+            pvalcut = input$pvalcut,
+            scale_trans=tolower(input$riskScale)
+          )})
 
           withProgress(message = "Generating Summary table", value = 0, {
             data$toutput <- try(
@@ -297,7 +297,7 @@ server <- function(input, output, session) {
               )
             )
           })
-        })
+        
       }
 
       ft_out <- title_ftnote(
