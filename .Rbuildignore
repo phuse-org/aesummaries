@@ -2,3 +2,10 @@
 ^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^data-raw$
+^LICENSE\.md$
+^app\.R$
+^\.github$
+^\.lintr$
+^doc$
+^Meta$

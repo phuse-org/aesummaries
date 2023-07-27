@@ -1,0 +1,2 @@
+linters: linters_with_defaults(line_length_linter(100), object_length_linter(50), cyclocomp_linter(75L), object_usage_linter=NULL, object_name_linter=NULL)
+encoding: "UTF-8"

@@ -1,27 +1,76 @@
-Package: aesummaries
-Type: Package
-Title: What the Package Does (Title Case)
+Package: cvars
+Title: Clinical Visual Analytics for Review and Submission
 Version: 0.1.0
-Authors@R: 
-    c(person(given = "",
-             family = "",
-             role = c("aut", "cre"),
-             email = ""),
-      person(given = "",
-             family = "",
-             role = "aut"))
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
+Authors@R: c(
+    person("Smriti", "Anand", email = "SMRITI.ANAND@pfizer.com", role = c("aut", "cre")),
+    person("Jayashree", "V", role = "aut"),
+    person("Sukalpo", "Saha", role = "aut"),
+    person("Vikram", "S", role = "aut"),
+    person("Jagadish", "Katam", role = "aut"),
+    person("Arjun", "Rubalingam", role = "aut"),
+    person("Amol Bandu", "Gorde", role = "aut"),
+    person("Gomathi", "S", role = "aut"),
+    person("Dhivya", "Kanagaraj", role = "ctb"),
+    person("Manali", "Jadhav", role = "ctb"),
+    person("Prakasam", "R", role = "ctb")
+  )
+Description: The purpose of this Application is to visualize the AE
+    (Adverse Event) dataset through Interactive R shiny Graphs (Volcano, Forest and 
+    Event Analysis Plot). In this Application, we can generate the plots
+    which will be according to the filters that we select. Since we have
+    many table of tables to visualize certain statistics and measures for
+    AE, we can simply use this app to display plots for all the
+    combinations of treatments.
+License: Apache License (>= 2)
+URL: https://github.com/phuse-org/aesummaries/
+BugReports: https://github.com/phuse-org/aesummaries/issues/
 Depends: 
-    R (>= 2.10)
-RoxygenNote: 7.1.1
+    R (>= 3.5)
 Imports: 
-    htmlwidgets
+    dplyr (>= 1.0.7),
+    DT (>= 0.19),
+    epitools (>= 0.5.10.1),
+    flextable (>= 0.8.6),
+    forcats (>= 0.5.1),
+    ggplot2 (>= 3.3.5),
+    golem (>= 0.3.1),
+    htmltools (>= 0.5.2),
+    magrittr (>= 2.0.3),
+    officer (>= 0.6.1),
+    rlang (>= 1.1.1),
+    scales (>= 1.1.1),
+    shiny (>= 1.7.1),
+    shinydashboard (>= 0.7.2),
+    shinyjs (>= 2.0.0),
+    shinyWidgets (>= 0.6.2),
+    stringr (>= 1.4.0),
+    tibble (>= 3.1.6)
 Suggests: 
+    cli,
+    config,
+    cowplot,
+    ftExtra,
+    ggstance,
+    glue,
+    haven,
+    knitr (>= 1.36),
+    lifecycle,
+    markdown (>= 1.1),
+    plotly,
+    plyr,
+    purrr,
+    RCurl,
     rmarkdown,
+    shinycssloaders,
+    testthat (>= 3.1.0),
+    tidyr,
+    utils,
+    withr
+VignetteBuilder: 
     knitr
-VignetteBuilder: knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
