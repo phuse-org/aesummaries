@@ -1,0 +1,101 @@
+---
+title: "Adverse Event Table"
+output:
+  html_document:
+    df_print: paged
+params:
+  population_filter: "SAFFL"
+  ae_filter: "Any Event"
+  aSubset: "AOCCPFL=='Y'"
+  dSubset: "!is.na(ASTDT)"
+  trtvar: "TRTA"
+  trtsort: "TRTAN"
+  obs_period: "Overall Duration"
+  obs_residual: 28
+  eventvar: "AEDECOD"
+  eventbyvar: "AEBODSYS"
+  summary_by: "Patients"
+  ctrlgrp: "Placebo"
+  trtgrp: "Xanomeline Low Dose"
+  subgrpvar: ""
+  subgrptot: "N"
+  alpha: 0.05
+  cutoff: 5
+  sort_opt: "Ascending"
+  sort_var: "Count"
+  riskyn: "Y"
+  statistics: "Risk Ratio"
+  trttotalyn: "N"
+  bign: "Y"
+  grpvarmiss: "N"
+  pctdisp: "TRT"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(cvars)
+```
+
+```{r processing, include=FALSE}
+
+data(adae)
+data(FMQ_Consolidated_List)
+
+# Default is for higher level term = "AEBODSYS" and lower level term = "AEDECOD"
+
+# For higher or lower term to be FMQ, pass FMQ_NAM in aeEventVar or aeByvar and fmq_data as
+# FMQ_Consolidated_List dataframe
+
+## Calling AE pre-processing to apply all the AE user requirements
+ae_pre <- ae_pre_processor(
+  datain = adae,
+  aeSubset = params$aSubset,
+  aeDenomSubset = params$dSubset,
+  ae_filter = params$ae_filter,
+  aeObsPeriod = params$obs_period,
+  aeObsResidual = params$obs_residual,
+  trtvar = params$trtvar,
+  trtsort = params$trtsort,
+  pop_fil = params$population_filter,
+  fmq_data = FMQ_Consolidated_List,
+  aeEventVar = params$eventvar,
+  aeByVar = params$eventbyvar,
+  aeSubGrpVar = ifelse(params$subgrpvar == "", NA, params$subgrpvar),
+  aeBigN = params$bign,
+  aeGrpVarMiss = params$grpvarmiss,
+  aeTrtTot = params$trttotalyn,
+  aeSubGrpTot = params$subgrptot
+)
+
+# Summary Table
+## The function arguments ctrgrp and trtgrp are only used when 'riskyn' is passed as "Y":
+## count summary table with pair-wise risk statistic to be displayed
+## When riskyn is passed as "N": a table with count summary of all treatments and no risk statistic
+## is created
+
+toutput <- adae_r001(
+  datain = ae_pre,
+  population = params$population_filter,
+  AE_Filter = params$ae_filter,
+  riskyn = params$riskyn,
+  summary_by = params$summary_by,
+  ctrlgrp = params$ctrlgrp,
+  trtgrp = params$trtgrp,
+  ui_lt = params$eventvar,
+  ui_ht = params$eventbyvar,
+  ui_statistics = params$statistics,
+  ui_trttotalyn = params$trttotalyn,
+  ui_trtbign = params$bign,
+  ui_alpha = params$alpha,
+  ui_cutoff = params$cutoff,
+  ui_sortopt = params$sort_opt,
+  ui_sortvar = params$sort_var
+)
+```
+
+```{r , echo = FALSE, warning = FALSE, message = FALSE, results="asis"}
+
+cat(gsub(pattern = "\n", replacement = "  \n", x = toutput$title), "\n")
+toutput$tout
+cat(gsub(pattern = "\n", replacement = "  \n", x = toutput$footnote), "\n")
+```

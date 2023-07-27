@@ -1,1 +1,116 @@
+---
+title: "Adverse Event Volcano Plot"
+output:
+  html_document:
+    df_print: paged
+params:
+  aeSubset: "AOCCPFL=='Y'"
+  aeDenomSubset: "!is.na(ASTDT)"
+  aeObsPeriod: "Overall Duration"
+  aeObsResidual: 0
+  aeEventVar: "FMQ_NAM"
+  eventVar: "AEDECOD"
+  aeByVar: "AEBODSYS"
+  aeBigN: "Y"
+  aeGrpVarMiss: "Y"
+  aeTrtTot: "Y"
+  aeSubGrpTot: "Y"
+  pop_fil: "SAFFL"
+  ae_filter: "Any Event"
+  trtvar: "TRTA"
+  trtsort: "TRTAN"
+  obs_period: "Overall Duration"
+  obs_residual: 28
+  ctrlgrp: "Placebo"
+  trtgrp: "Xanomeline High Dose"
+  summary_by: "Patients"
+  alpha: 0.05
+  cutoff: 5
+  sort_opt: "Ascending"
+  sort_var: "Count"
+  statistics: "Risk Ratio"
+  xlims: c(0, 3)
+  xref: 0
+  pvalue_label: "None"
+  treatment1_label: 'Control'
+  treatment2_label: 'Treatment'
+  pvalcut: 0.05
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(cvars)
+```
+
+
+```{r processing, include=FALSE}
+# Read input datasets
+data("adae")
+data("FMQ_Consolidated_List")
+
+# Pre-processing of input dataset
+ae_pre <- ae_pre_processor(
+  datain = adae,
+  aeSubset = params$aeSubset,
+  aeDenomSubset = params$aeDenomSubset,
+  ae_filter = params$ae_filter,
+  aeObsPeriod = params$aeObsPeriod,
+  aeObsResidual = params$aeObsResidual,
+  trtvar = params$trtvar,
+  trtsort = params$trtsort,
+  pop_fil = params$pop_fil,
+  fmq_data = FMQ_Consolidated_List,
+  aeEventVar = params$aeEventVar,
+  aeByVar = params$aeByVar,
+  aeSubGrpVar = NA,
+  aeBigN = params$aeBigN,
+  aeGrpVarMiss = params$aeGrpVarMiss,
+  aeTrtTot = params$aeTrtTot,
+  aeSubGrpTot = params$aeSubGrpTot
+)
+
+
+
+# Calculate statistics needed for the analysis
+ stats <- risk_stat(
+  data = ae_pre$dsin,
+  d_datain = ae_pre$dout,
+  eventVar = params$eventVar,
+  summary_by = params$summary_by,
+  ctrlgrp = params$ctrlgrp,
+  trtgrp = params$trtgrp,
+  statistics = params$statistics,
+  alpha = params$alpha,
+  cutoff = params$cutoff,
+  sort_opt = params$sort_opt,
+  sort_var = params$sort_var
+)
+
+
+# Generates volcano plot
+goutput <- volcano_plot(
+  datain = ae_pre$dsin,
+  statistics_data = stats,
+  AE_Filter = params$ae_filter,
+  summary_by = params$summary_by,
+  statistics = params$statistics,
+  treatment1 = params$ctrlgrp,
+  treatment1_label = params$treatment1_label,
+  treatment2_label = params$treatment2_label,
+  treatment2 = params$trtgrp,
+  X_ref = params$xref,
+  pvalue_label = params$pvalue_label,
+  pvalcut = params$pvalcut
+)
+
+
+```
+
+
+
+```{r , echo = FALSE, warning = FALSE, message = FALSE, results="asis"}
+
+cat(gsub(pattern = "\n", replacement = "  \n", x = goutput$title), "\n")
+goutput$ptly
+cat(gsub(pattern = "\n", replacement = "  \n", x = goutput$footnote), "\n")
+```

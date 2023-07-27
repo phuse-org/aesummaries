@@ -1,0 +1,110 @@
+---
+title: "Adverse Event Forest Plot"
+output:
+  html_document:
+    df_print: paged
+params:
+  population_filter: "SAFFL"
+  ae_filter: "Any Event"
+  aSubset: "AOCCPFL=='Y'"
+  dSubset: "!is.na(ASTDT)"
+  trtvar: "TRTA"
+  trtsort: "TRTAN"
+  obs_period: "Overall Duration"
+  obs_residual: 28
+  eventvar: "AEDECOD"
+  eventbyvar: "AEBODSYS"
+  summary_by: "Patients"
+  ctrlgrp: "Placebo"
+  trtgrp: "Xanomeline Low Dose~~Xanomeline High Dose"
+  trttotalyn: "N"
+  bign: "Y"
+  grpvarmiss: "N"
+  alpha: 0.05
+  cutoff: 5
+  sort_opt: "Ascending"
+  sort_var: "Count"
+  series_color: ""
+  marker_shape: ""
+  statistics: "Risk Ratio"
+  xref: 1
+  pvalcut: 0.05
+  scale_trans: "identity"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(cvars)
+
+```
+
+
+```{r processing, include=FALSE}
+
+data(adae, package = "cvars")
+data(FMQ_Consolidated_List, package = "cvars")
+
+# Default lower event term is AEDECOD and default high term is AEBODSYS.
+# To make either as FMQ terms, pass aeEventVar or aeByVar as FMQ_NAM
+
+## Calling AE pre-processing to apply all the AE user requirements
+ae_pre <- ae_pre_processor(
+  datain = adae,
+  aeSubset = params$aSubset,
+  aeDenomSubset = params$dSubset,
+  ae_filter = params$ae_filter,
+  aeObsPeriod = params$obs_period,
+  aeObsResidual = params$obs_residual,
+  trtvar = params$trtvar,
+  trtsort = params$trtsort,
+  pop_fil = params$population_filter,
+  fmq_data = FMQ_Consolidated_List,
+  aeEventVar = params$eventvar,
+  aeByVar = params$eventbyvar,
+  aeSubGrpVar = NA,
+  aeBigN = "N",
+  aeGrpVarMiss = params$grpvarmiss,
+  aeTrtTot = params$trttotalyn
+)
+
+## calling get stat to calculate the risk values
+stats <- risk_stat(
+  datain = ae_pre$dsin,
+  d_datain = ae_pre$dout,
+  eventVar = params$eventvar,
+  summary_by = params$summary_by,
+  ctrlgrp = params$ctrlgrp,
+  trtgrp = params$trtgrp,
+  statistics = params$statistics,
+  alpha = params$alpha,
+  cutoff = params$cutoff,
+  sort_opt = params$sort_opt,
+  sort_var = params$sort_var
+)
+
+
+## calling forest plot utility to generate forest plot and title footnote.
+goutput <- forest_plot(
+  datain = stats,
+  AE_Filter = params$ae_filter,
+  review_by = c(params$eventbyvar, params$eventvar),
+  summary_by = params$summary_by,
+  statistics = params$statistics,
+  xref = params$xref,
+  pvalcut = params$pvalcut,
+  trtbign = params$bign,
+  scale_trans = params$scale_trans,
+  series_color = ifelse(params$series_color == "", NA, params$series_color),
+  marker_shape = ifelse(params$marker_shape == "", NA, params$marker_shape)
+)
+
+```
+
+
+
+```{r , warning = FALSE, message = FALSE, results="asis"}
+
+cat(gsub(pattern = "\n", replacement = "  \n", x = goutput$title), "\n")
+goutput$ptly
+cat(gsub(pattern = "\n", replacement = "  \n", x = goutput$footnote), "\n")
+```

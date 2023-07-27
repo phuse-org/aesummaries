@@ -1,0 +1,79 @@
+---
+title: "event_analysis"
+output: rmarkdown::html_vignette
+params:
+  Population_Filter: "Overall"
+  data_filter: ""
+  trtvar: "TRTA"
+  obs_period: "Overall Duration"
+  obs_residual: 28
+  pop: "SAFFL=='Y'"
+  query_var: "FMQ_NAM"
+  query_val: "Erythema"
+  query_scope: "Narrow"
+  pt_val: "Erythema"
+  ref_line: 2
+vignette: >
+  %\VignetteIndexEntry{event_analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r, include = FALSE}
+devtools::load_all()
+
+data(adsl, package = "cvars")
+data(adae, package = "cvars")
+data(FMQ_Consolidated_List, package = "cvars")
+
+adsl_merge <- adsl_merge(
+  adsl = adsl,
+  pop = params$pop,
+  analysis_data = adae
+)
+
+
+data_in <- data_processing(
+  datain = adsl_merge,
+  Population_Filter = params$Population_Filter,
+  data_filter = params$data_filter,
+  trtvar = params$trtvar,
+  obs_period = params$obs_period,
+  obs_residual = params$obs_residual,
+  fmq_query_list = FMQ_Consolidated_List
+)
+
+
+goutput <- event_analysis(
+  data_in,
+  query_var = params$query_var,
+  query_val = params$query_val,
+  query_scope = params$query_scope,
+  pt_val = params$pt_val,
+  ref_line = params$ref_line
+)
+
+
+
+ft_out <- title_ftnote(
+  summary_by = "Events",
+  filters = NULL,
+  statistics = NULL,
+  report = "event analysis"
+)
+```
+
+
+```{r, include=TRUE, echo=FALSE, fig.height=5, fig.width=10, results="asis"}
+cat(gsub(pattern = "\n", replacement = "  \n", x = ft_out[1]), "\n")
+goutput$ptly
+cat(gsub(pattern = "\n", replacement = "  \n", x = ft_out[2]), "\n")
+```
