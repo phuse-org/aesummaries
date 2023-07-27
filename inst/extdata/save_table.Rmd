@@ -1,1 +1,37 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+  html_document:
+    df_print: paged
+params:
+  title: "test title"
+  ftnote: "test footnote"
+  ftable: "test table"
+header-includes: 
+ \usepackage{geometry}
+ \geometry{top=1in,left=0.5in,bottom=1in,right=0.5in}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
+doc <- opts_knit$get("rmarkdown.pandoc.to")
+library(flextable)
+library(tinytex)
+```
+
+
+
+```{r cars, results="asis",ft.align = "left",ft.latex.float = "none"}
+cat(params$title, "\n")
+if (doc != "html") {
+  width(params$ftable,
+        width = dim(params$ftable)$widths * 7 / (flextable_dim(params$ftable)$widths))
+} else {
+  params$ftable
+}
+cat("\n", params$ftnote)
+```
+
 
