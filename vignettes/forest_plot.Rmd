@@ -1,0 +1,100 @@
+---
+title: "Forest Plot"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Forest Plot}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction  
+This article pertains to creating Forest Plot of Adverse Events using the CVARS application. The required input ADaM data for this is an `ADAE` dataset.  
+
+
+## Report Inputs in App  
+
+Upon loading `ADAE` data and clicking the Report Inputs tab, select Report Type as `Figure` and Report Name as `Forest Plot`  
+
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("forestplot_new_1.png")
+```
+
+**Treatment/Population**  
+*Required*  
+
+  - Under Treatment and Population Selection, select appropriate `Treatment Variable`:   
+  Treatment Variable determines grouping of points in the scatter plot section as well as treatment pairs in the risk forest section.  
+  - Select appropriate `Treatment Sort Variable` which will give the order for sorting Treatment variable  
+  - To subset entire data based on available population flags, select `Population Filter`. eg. Overall, Safety (SAFFL) etc  
+  
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("adae_treatment.png")
+```
+  
+**Data Pre-processing/Preparation**  
+*Optional - Can use defaults*
+
+  - `Analysis Subset Condition` is the filter condition for the data to get counts of participants/events for each treatment.  
+  - `Denominator Subset Condition` is the filter condition for the data to calculate percentages of participants/events for each treatment.  
+  - `Adverse Event Filter(s)` , select which adverse events are to be filtered for analysis from the list available in the data.  
+  - `Period` drop-down to filter the required time period alone select 'Overall Period' to take entire data or 'Other' to specify the residual period (in days) to cut off.    
+  
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("ae_filterperiod.png")
+```
+  
+  - `Summary By` to select either 'Patients' or 'Events' which determines how counts are calculated.
+  - `Lower Level Event Term` - Variable which gives the list of adverse event terms to be analysed and displayed in the plot  
+  - `Higher Level Event Term` - Variable that is used for grouping Lower Level Term, its values will be reflected in the Hover information for each term.  
+  
+  
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("ae_summaryterm.png")
+```
+  
+**Statistical Analysis**  
+
+  - `Measure of Association` - which statistic to calculate, 'Risk Difference' or 'Risk Ratio'  
+  - `Alpha Value(CI)` - Give the alpha value to determine Confidence Interval. eg. 0.05 --> 95% CI  
+  - `p Value Cutoff` - The p-value below which to consider the any difference in % as statistically significant.  
+  - `Risk Reference Lines` - X axis intercept value to draw a vertical reference line in pair-wise risk plot.  
+  - `Risk Axis Scale` - How to transform risk axis to be plotted - log or identity (values as is) scales  
+  
+```{r, echo=FALSE, out.width="90%",,out.height="90%",fig.align='center'}
+knitr::include_graphics("forest_riskstat.png")
+```
+    
+ - `Control Group` - Select treatment value within Treatment Variable to use as control for analysis  
+ - `Treatment Group` - Select treatment value(s) to perform pair-wise analysis against Control. Selecting multiple treatments will result in displaying multiple pairs, eg. Control-Treatment1 and Control-Treatment2 pairs in this case.  
+ 
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("forest_trtgroup.png")
+```
+
+**Graphical Display Options**  
+
+  - `Cutoff Incidence` - Slide to the minimum % incidence a term should have (either in control or treatment group) to be displayed in the graph. Those with lower values will be removed.  
+  - `p-value Transformation` - Transform p-values displayed in graph for each term - None or log transform.  
+  - `Sorting Option` - Order in which to sort the Adverse Event terms in plot - Ascending, Descending (using `Sorting Variable`) or Alphabetical.  
+  - `Sorting Variable` - Which parameter/measure should be used to sort the terms in the plot in order of `Sorting Option`  
+  
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("forest_graphdisp.png")
+```
+
+
+**Graph Output**  
+
+For selected options, visualize Forest Plot in Graph Output tab. Note that the color legend identifies the risk pairs in forest graph as well as p-value columns. In the incidence scatterplot, certain points are also depicted with larger green and red points which denotes a statistically significant (per p value cutoff) lower or higher incidence % respectively, for the treatment group vs control.  
+
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("forest_output.png")
+```

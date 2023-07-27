@@ -1,0 +1,96 @@
+---
+title: "Volcano plot for Risk Ratio of Any Adverse Events"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+vignette: >
+  %\VignetteIndexEntry{Volcano plot for Risk Ratio of Any Adverse Events}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## 1. Introduction
+
+This document details the steps for creating Volcano Plot using CVARS application which is a graph report. The required input ADaM data for this is an ADAE dataset.
+
+### 1.1 Report Inputs in App
+
+Upon loading the CVARS  application, please select the `Data Source`and load the `ADAE` data.
+
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("adaeenter.png")
+```
+
+Upon loading/selecting `ADAE` data and clicking the Report Inputs tab, report inputs can be added.
+
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("adae_report_input.png")
+```
+
+  - Report Type as `Figure` and Report Name as `Volcano Plot` for the graph  
+  
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("volcano_plot_new_1.png")
+```
+
+**Treatment/Population**  
+*Required*  
+
+  - Under Treatment and Population Selection, select appropriate `Treatment Variable`:   
+    For table, Treatment Variable determines the columns and for Figure, determines how to         differentiate groups by color.
+    
+  - Select appropriate `Treatment Sort Variable` which will give the order for sorting             Treatment variable.
+  
+  - To subset entire data based on population flags, select `Population Filter`. eg. Overall,      Safety (SAFFL).
+
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("event_analysis_02.PNG")
+```
+
+
+**Processing Data:**  
+
+  - Add or Edit the default `Analysis Subset Condition` and `Denominator Subset Condition` to      filter input data (for calculating categorical counts alone or for entire data                 respectively)
+  
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("event_analysis_03.PNG")
+```
+
+  - Select `Adverse Event Filter(s)` - To filter input data
+
+  - Select `Period` - To generate the figure by either `Overall Duration` or `Other`.
+  
+  - Select `Summary By` - It helps to select either `Participants` if the plot is to based on subject count or `Events` if the plot is to based on AE counts.
+  
+  - Select `Lower Level Event Term` - This variable will help to generate the figure by           AEBODSYS or FMQ Name etc., It is a type of scatterplot that shows statistical significance (P-value) versus magnitude of change (fold change).
+  
+  - Select `Lower Level Event Term` - This variable will help to generate the figure by           AEDECOD or AELLT etc., It is a type of scatterplot that shows statistical significance (P-value) versus magnitude of change (fold change). 
+  
+  - select `Measure of Association` - To generate the plot by either `Risk Ratio` or `Risk Difference`.
+  
+  - Select `Control Group` - To choose the control treatment to compare with treatment 
+  
+  - Select `Treatment Group` - To choose the treatment to compare with control
+ 
+  - Update the `p Value Cutoff`, `Alpha Value(CI)`, `Risk Reference Lines` and `Cutoff of Incidence (%)` as desired to generate the plot. 
+ 
+ 
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("volcano_plot_02.PNG")
+```
+
+**Graph Output:**
+
+- Click `Process Report Input` button and switch to `Graph Output` tab to generate the graph.
+
+  
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("volcano_plot_03.PNG")
+```
