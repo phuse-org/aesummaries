@@ -23,7 +23,6 @@ a package to generate interactive forest and volcano plots for adverse event and
 FDA Medical Queries (FMQs) analysis outputs for inclusion in submissions 
 to the FDA. 
 This work is a collaboration among the American Statistical Association (ASA), PHUSE, and FDA.
-
 License: Apache License (>= 2)
 URL: https://github.com/phuse-org/aesummaries/
 BugReports: https://github.com/phuse-org/aesummaries/issues/
