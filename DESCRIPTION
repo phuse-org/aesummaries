@@ -2,7 +2,7 @@ Package: cvars
 Title: Clinical Visual Analytics for Review and Submission
 Version: 0.1.0
 Authors@R: c(
-    person("Smriti", "Anand", email = "SMRITI.ANAND@pfizer.com", role = c("aut", "cre")),
+    person("Smriti", "Anand", email = "xxx@xxx.com", role = c("aut", "cre")),
     person("Jayashree", "V", role = "aut"),
     person("Sukalpo", "Saha", role = "aut"),
     person("Vikram", "S", role = "aut"),
@@ -11,6 +11,8 @@ Authors@R: c(
     person("Amol Bandu", "Gorde", role = "aut"),
     person("Gomathi", "S", role = "aut"),
     person("Dhivya", "Kanagaraj", role = "ctb"),
+    person("Neetu", "Sangari, role = "ctb"),
+    person("Aishwarya", "LR", role = "ctb"),
     person("Manali", "Jadhav", role = "ctb"),
     person("Prakasam", "R", role = "ctb")
   )
