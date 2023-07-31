@@ -6,7 +6,7 @@
 \alias{cvars-package}
 \title{cvars: Clinical Visual Analytics for Review and Submission}
 \description{
-The purpose of this Application is to visualize the AE (Adverse Event) dataset through Interactive R shiny Graphs (Volcano, Forest and Event Analysis Plot). In this Application, we can generate the plots which will be according to the filters that we select. Since we have many table of tables to visualize certain statistics and measures for AE, we can simply use this app to display plots for all the combinations of treatments.
+Development of an open-source tool and package to enable generation of identified interactive plots for clinical review and direct inclusion in submission for regulatory agencies. The initial scope is to develop a package to generate interactive forest and volcano plots for adverse event and FDA Medical Queries (FMQs) analysis outputs for inclusion in submissions to the FDA. This work is a collaboration among the American Statistical Association (ASA), PHUSE, and FDA.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Smriti Anand \email{SMRITI.ANAND@pfizer.com}
+\strong{Maintainer}: Smriti Anand \email{xxx@xxx.com}
 
 Authors:
 \itemize{
@@ -33,6 +33,8 @@ Authors:
 Other contributors:
 \itemize{
   \item Dhivya Kanagaraj [contributor]
+  \item Neetu Sangari [contributor]
+  \item Aishwarya LR [contributor]
   \item Manali Jadhav [contributor]
   \item Prakasam R [contributor]
 }
