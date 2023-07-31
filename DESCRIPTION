@@ -11,18 +11,19 @@ Authors@R: c(
     person("Amol Bandu", "Gorde", role = "aut"),
     person("Gomathi", "S", role = "aut"),
     person("Dhivya", "Kanagaraj", role = "ctb"),
-    person("Neetu", "Sangari, role = "ctb"),
+    person("Neetu", "Sangari", role = "ctb"),
     person("Aishwarya", "LR", role = "ctb"),
     person("Manali", "Jadhav", role = "ctb"),
     person("Prakasam", "R", role = "ctb")
-  )
-Description: Development of an open-source tool and package to enable 
-generation of identified interactive plots for clinical review and direct inclusion 
-in submission for regulatory agencies. The initial scope is to develop 
-a package to generate interactive forest and volcano plots for adverse event and 
-FDA Medical Queries (FMQs) analysis outputs for inclusion in submissions 
-to the FDA. 
-This work is a collaboration among the American Statistical Association (ASA), PHUSE, and FDA.
+   )
+Description: Development of an open-source tool and package to enable
+    generation of identified interactive plots for clinical review and
+    direct inclusion in submission for regulatory agencies. The initial
+    scope is to develop a package to generate interactive forest and
+    volcano plots for adverse event and FDA Medical Queries (FMQs)
+    analysis outputs for inclusion in submissions to the FDA. This work is
+    a collaboration among the American Statistical Association (ASA),
+    PHUSE, and FDA.
 License: Apache License (>= 2)
 URL: https://github.com/phuse-org/aesummaries/
 BugReports: https://github.com/phuse-org/aesummaries/issues/
