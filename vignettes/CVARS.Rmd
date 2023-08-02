@@ -2,8 +2,8 @@
 title: "Clinical Visual Analytics for Review and Submission(CVARS)"
 date: "`r Sys.Date()`"
 author:
-- Global Biometrics and Data Management
-- Statistical Data Science and Analytics
+- Clinical Tables & Figures
+- CVARS
 output: rmarkdown::html_vignette
 
 html_document:
