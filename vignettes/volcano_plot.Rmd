@@ -50,7 +50,7 @@ knitr::include_graphics("adaebox_treatment.png")
   - Add or Edit the default `Analysis Subset Condition` and `Denominator Subset Condition` to      filter input data (for calculating categorical counts alone or for entire data                 respectively)
   
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_03.png")
+knitr::include_graphics("event_analysis_03.PNG")
 ```
 
   - Select `Adverse Event Filter(s)` - To filter input data
@@ -73,7 +73,7 @@ knitr::include_graphics("event_analysis_03.png")
  
  
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("volcano_plot_02.png")
+knitr::include_graphics("volcano_plot_02.PNG")
 ```
 
 **Graph Output:**
@@ -82,5 +82,5 @@ knitr::include_graphics("volcano_plot_02.png")
 
   
 ```{r, echo=FALSE, out.width="70%", fig.align='center'}
-knitr::include_graphics("volcano_plot_03.png")
+knitr::include_graphics("volcano_plot_03.PNG")
 ```
