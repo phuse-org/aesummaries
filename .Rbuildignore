@@ -9,3 +9,5 @@
 ^\.lintr$
 ^doc$
 ^Meta$
+^README\.Rmd$
+^rsconnect$

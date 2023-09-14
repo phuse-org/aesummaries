@@ -80,6 +80,11 @@ forest_plot <-
            pvalcut = 0.05,
            trtbign = "Y",
            scale_trans = "identity") {
+    # Check risk data exists:
+    if (nrow(datain) == 0) {
+      output <- empty_plot()
+      return(list(ptly = output$ptly, plot = output$plot, rpt_data = datain))
+    }
     ## If trtbign is Y (default) then treatment label gets (N=count) added:
     if (trtbign == "Y") {
       datain <- datain %>% mutate(TRTTXT = paste0(TRTVAR, " (N=", TOTAL_N, ")"))
@@ -217,22 +222,22 @@ forest_plot <-
       source = "plot_output"
     )
 
+
+    splotly <- splotly %>%
+      plotly::layout(xaxis = list(side = "top"))
+
     # Fixing legend with parantheses
     for (i in seq_along(splotly$x$data)) {
       if (!is.null(splotly$x$data[[i]]$name)) {
         splotly$x$data[[i]]$name <- sub(
           "\\(", "",
-          sapply(lapply(strsplit(
-            splotly$x$data[[i]]$name,
-            ","
-          ), head, -1), paste, collapse = ",")
-        ) # [1]
+          sub(
+            ",1,NA\\)|,1\\)", "",
+            splotly$x$data[[i]]$name
+          )
+        )
       }
     }
-    splotly <- splotly %>%
-      plotly::layout(xaxis = list(side = "top"))
-
-
     ### Prepare Data for forest plot:
     # Adding treatment pair, remove count from hover info
     dat_out <- dat_out %>%
@@ -418,9 +423,6 @@ forest_plot <-
           size = 8, xanchor = "center", yanchor = "top", font = list(size = 8)
         )
       )
-
-
-
     inter_fig$x$source <- "plot_output"
 
     ### Combine for For static ggplot output for download purposes:
@@ -480,15 +482,14 @@ forest_plot <-
       "* N is the total number of ",
       ifelse(tolower(summary_by) == "patients", "participants", "events"),
       ". \nClassifications of adverse events are based on the Medical Dictionary for Regulatory ",
-      "Activities (MedDRA v21.1). \nDashed Vertical line represents risk value reference line \n",
+      "Activities (MedDRA v21.1). \nDashed Vertical line represents risk value reference line. \n",
       "Totals for the No. of Participants/Events at a higher level are not necessarily ",
-      "the sum of those at the lower levels since a participant may report two or more \n",
+      "the sum of those at the lower levels since a participant may report two or more. \n",
       ifelse(tolower(summary_by) == "patients",
         "The number of participants reporting at least 1 occurrence of the event specified.",
-        "Event counts are the sum of individual occurrences within that category"
+        "Event counts are the sum of individual occurrences within that category."
       )
     )
-
     return(list(
       ptly = inter_fig,
       plot = static_fig,

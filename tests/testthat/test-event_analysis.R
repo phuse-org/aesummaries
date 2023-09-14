@@ -22,8 +22,8 @@ test_that("Test Case 1: Event Analysis works with expected inputs", {
       function(x) ptly_data[[x]][["legendgroup"]]
     )))
 
-  expect_equal(length(goutput), 5)
-  expect_equal(names(goutput), c("ptly", "plot", "rpt_data", "title", "footnote"))
+  expect_equal(length(goutput), 6)
+  expect_equal(names(goutput), c("ptly", "plot", "rpt_data", "rpt_data1", "title", "footnote"))
   expect_true(nrow(goutput$rpt_data) > 0)
   expect_type(goutput$ptly, "list")
   expect_equal(legendgroups, sort(unique(goutput[["rpt_data"]][["DPTVAL"]])))
@@ -33,13 +33,13 @@ test_that("Test Case 1: Event Analysis works with expected inputs", {
     goutput$footnote,
     paste0(
       "* N is the total number of events. \nClassifications of adverse events ",
-      "are based on the Medical Dictionary for Regulatory\n    Activities (MedDRA",
+      "are based on the Medical Dictionary for Regulatory Activities (MedDRA",
       " v21.1). \nFMQ classification is based on FDA FMQ consolidated list. ",
       "\nDashed Horizontal line represents incidence percentage reference line. ",
       "\nTotals for the No. of Participants/Events at a higher level are not ",
-      "necessarily the sum of\n    those at the lower levels since a participant ",
-      "may report two or more \nPT - Preferred Term ; FMQ - FDA MedDRA Queries ",
-      "\nEvent counts are the sum of individual occurrences within that category"
+      "necessarily the sum of those at the lower levels since a participant ",
+      "may report two or more. \nPT - Preferred Term ; FMQ - FDA MedDRA Queries ",
+      "\nEvent counts are the sum of individual occurrences within that category."
     )
   )
 })
@@ -67,8 +67,8 @@ test_that("Test Case 2:  Event Analysis works with expected inputs", {
       function(x) ptly_data[[x]][["legendgroup"]]
     )))
 
-  expect_equal(length(goutput), 5)
-  expect_equal(names(goutput), c("ptly", "plot", "rpt_data", "title", "footnote"))
+  expect_equal(length(goutput), 6)
+  expect_equal(names(goutput), c("ptly", "plot", "rpt_data", "rpt_data1", "title", "footnote"))
   expect_true(nrow(goutput$rpt_data) > 0)
   expect_type(goutput$ptly, "list")
   expect_equal(legendgroups, sort(unique(goutput[["rpt_data"]][["DPTVAL"]])))
@@ -78,13 +78,13 @@ test_that("Test Case 2:  Event Analysis works with expected inputs", {
     goutput$footnote,
     paste0(
       "* N is the total number of events. \nClassifications of adverse events ",
-      "are based on the Medical Dictionary for Regulatory\n    Activities (MedDRA",
+      "are based on the Medical Dictionary for Regulatory Activities (MedDRA",
       " v21.1). \nFMQ classification is based on FDA FMQ consolidated list. ",
       "\nDashed Horizontal line represents incidence percentage reference line. ",
       "\nTotals for the No. of Participants/Events at a higher level are not ",
-      "necessarily the sum of\n    those at the lower levels since a participant ",
-      "may report two or more \nPT - Preferred Term ; FMQ - FDA MedDRA Queries ",
-      "\nEvent counts are the sum of individual occurrences within that category"
+      "necessarily the sum of those at the lower levels since a participant ",
+      "may report two or more. \nPT - Preferred Term ; FMQ - FDA MedDRA Queries ",
+      "\nEvent counts are the sum of individual occurrences within that category."
     )
   )
 })

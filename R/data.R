@@ -59,3 +59,13 @@
 #' @format List containing 2 data frames `dsin` and `dout` (to be passed in `event_analysis`) and
 #' `bigN` value
 "event_df"
+
+#' CM
+#'
+#' Concomitant Medications Dataset
+#'
+#' @source <https://github.com/phuse-org/aesummaries/tree/main/inst/extdata/cm.xpt>,
+#' downloaded 2023-08-24
+#'
+#' @format Data frame with 7510 rows and 21 variables
+"cm"

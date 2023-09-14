@@ -1,0 +1,76 @@
+.content-wrapper {
+    background-color: #ffffff !important;
+}
+
+.brand-link {
+    display: flex !important;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    padding: .8125rem .5rem;
+    transition: width .3s ease-in-out;
+    white-space: nowrap;
+    justify-content: center !important;
+    background-color: #051650 !important;
+    color: white !important;
+    font-family: math !important;
+    font-weight: bold !important;
+} 
+
+.sidebar-btn {
+    color: #051650 !important;
+    background-color: #DAF5FF;
+    border: 2px solid #051650;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin-right: 1.5vw !important;
+    border-radius: 9px;
+    width: 125px !important;
+}
+
+.download-btn {
+    color: #fff !important;
+    background-color: #28a745;
+    border: 2px solid #051650;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin-right: 0.75vw !important;
+    border-radius: 9px;
+    width: 125px !important;
+}
+
+.fa-solid, .fas {
+    font-weight: 900;
+    color: #051650 !important;
+}
+
+#download_report_1-save_btn > i.fas.fa-download {
+    color: #fff !important;
+}
+
+.card {
+    box-shadow: 0 0 2px #051650, 0 3px 3px #051650;
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    background-color: transparent;
+    padding: .75rem 1.25rem;
+    position: relative;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+#collapse_save_down_1 > div, #collapse_load_data_1 > div {
+    padding: 0.1rem !important;
+}
+
+.d-block {
+    display: flex !important;
+    justify-content: center;
+}
+
+.accordion>.card {
+    overflow: overlay;
+}

@@ -58,7 +58,7 @@ risk_stat <- function(datain,
                       sort_opt,
                       sort_var) {
   if (nrow(datain) == 0) {
-    return(NULL)
+    return(data.frame())
   }
 
   if (is.null(ctrlgrp) || is.null(trtgrp)) {
@@ -94,9 +94,11 @@ risk_stat <- function(datain,
   }
 
   ## looping through all the treatment pairs
-  for (t in trtgrp) {
+  for (treatment2 in trtgrp) {
     treatment1 <- ctrlgrp
-    treatment2 <- t
+    if (!(all(c(treatment1, treatment2) %in% unique(datain$TRTVAR)))) {
+      return(data.frame())
+    }
     ### Filtering based on selected treatment groups -----------------------------
     data1 <- datain %>%
       filter(TRTVAR %in% c(treatment1, treatment2))
@@ -128,10 +130,9 @@ risk_stat <- function(datain,
         collapse = " "
       )) %>%
       filter(PCT_CTRLGRP > cutoff | PCT_TRTGRP > cutoff) # filter based on cutoff value
-
     ## check for data after cut off
     if (nrow(mcatd) == 0) {
-      return(NULL)
+      return(data.frame())
     }
 
     aeSummCutOff <- mcatd %>%

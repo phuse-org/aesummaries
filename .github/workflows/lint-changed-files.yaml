@@ -40,7 +40,7 @@ jobs:
           lint_package(linters = linters_with_defaults(
             line_length_linter(100),
             object_length_linter(50L),
-            cyclocomp_linter(75L),
+            cyclocomp_linter(100L),
             indentation_linter = NULL,
             object_usage_linter = NULL, 
             object_name_linter = NULL

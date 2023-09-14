@@ -1,4 +1,4 @@
-#' @import shiny ggplot2 dplyr scales shinyWidgets shinydashboard
+#' @import shiny ggplot2 dplyr scales shinyWidgets
 #'         flextable epitools htmltools tools officer
 #' @importFrom DT addRow colReorder datatable formatDate saveWidget
 #'             formatPercentage formatRound formatStyle selectCells
@@ -22,6 +22,26 @@
 
 
 ## usethis namespace: start
+#' @importFrom bs4Dash navbarTab
+#' @importFrom bs4Dash accordion
+#' @importFrom bs4Dash accordionItem
+#' @importFrom bs4Dash box
+#' @importFrom bs4Dash boxSidebar
+#' @importFrom bs4Dash bs4Card
+#' @importFrom bs4Dash dashboardBody
+#' @importFrom bs4Dash dashboardHeader
+#' @importFrom bs4Dash dashboardPage
+#' @importFrom bs4Dash dashboardSidebar
+#' @importFrom bs4Dash menuItem
+#' @importFrom bs4Dash menuItemOutput
+#' @importFrom bs4Dash navbarTab
+#' @importFrom bs4Dash renderMenu
+#' @importFrom bs4Dash sidebarMenu
+#' @importFrom bs4Dash tabBox
+#' @importFrom bs4Dash tabItem
+#' @importFrom bs4Dash tabItems
+#' @importFrom bs4Dash tooltip
+#' @importFrom bs4Dash updateNavbarTabs
 #' @importFrom magrittr %>%
 ## usethis namespace: end
 NULL

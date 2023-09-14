@@ -22,17 +22,7 @@ This document details the steps for creating Volcano Plot using CVARS applicatio
 
 ### 1.1 Report Inputs in App
 
-Upon loading the CVARS  application, please select the `Data Source`and load the `ADAE` data.
-
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("adaeenter.png")
-```
-
 Upon loading/selecting `ADAE` data and clicking the Report Inputs tab, report inputs can be added.
-
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("adae_report_input.png")
-```
 
   - Report Type as `Figure` and Report Name as `Volcano Plot` for the graph  
   
@@ -50,8 +40,8 @@ knitr::include_graphics("volcano_plot_new_1.png")
   
   - To subset entire data based on population flags, select `Population Filter`. eg. Overall,      Safety (SAFFL).
 
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_02.PNG")
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("adaebox_treatment.png")
 ```
 
 
@@ -60,7 +50,7 @@ knitr::include_graphics("event_analysis_02.PNG")
   - Add or Edit the default `Analysis Subset Condition` and `Denominator Subset Condition` to      filter input data (for calculating categorical counts alone or for entire data                 respectively)
   
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_03.PNG")
+knitr::include_graphics("event_analysis_03.png")
 ```
 
   - Select `Adverse Event Filter(s)` - To filter input data
@@ -83,7 +73,7 @@ knitr::include_graphics("event_analysis_03.PNG")
  
  
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("volcano_plot_02.PNG")
+knitr::include_graphics("volcano_plot_02.png")
 ```
 
 **Graph Output:**
@@ -92,5 +82,5 @@ knitr::include_graphics("volcano_plot_02.PNG")
 
   
 ```{r, echo=FALSE, out.width="70%", fig.align='center'}
-knitr::include_graphics("volcano_plot_03.PNG")
+knitr::include_graphics("volcano_plot_03.png")
 ```

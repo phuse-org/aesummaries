@@ -35,8 +35,8 @@ knitr::include_graphics("forestplot_new_1.png")
   - Select appropriate `Treatment Sort Variable` which will give the order for sorting Treatment variable  
   - To subset entire data based on available population flags, select `Population Filter`. eg. Overall, Safety (SAFFL) etc  
   
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("adae_treatment.png")
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("adaebox_treatment.png")
 ```
   
 **Data Pre-processing/Preparation**  

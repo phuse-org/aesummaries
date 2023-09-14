@@ -83,5 +83,10 @@ globalVariables(c(
   "FMQ_NAM",
   "USUBJID",
   "key",
-  ":="
+  ":=",
+  "curve_n",
+  "point_n",
+  "Status",
+  "Value",
+  "ASEV"
 ))

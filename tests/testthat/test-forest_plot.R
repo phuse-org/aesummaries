@@ -62,9 +62,9 @@ test_that("Forest Plot Works with standard inputs", {
     paste0(
       "* N is the total number of participants. \nClassifications of adverse ",
       "events are based on the Medical Dictionary for Regulatory Activities (MedDRA v21.1",
-      "). \nDashed Vertical line represents risk value reference line \nTotals for the ",
+      "). \nDashed Vertical line represents risk value reference line. \nTotals for the ",
       "No. of Participants/Events at a higher level are not necessarily the sum of those ",
-      "at the lower levels since a participant may report two or more \nThe number of ",
+      "at the lower levels since a participant may report two or more. \nThe number of ",
       "participants reporting at least 1 occurrence of the event specified."
     )
   )
@@ -111,10 +111,28 @@ test_that("Forest plot arguments reflect correctly", {
     paste0(
       "* N is the total number of events. \nClassifications of adverse events are ",
       "based on the Medical Dictionary for Regulatory Activities (MedDRA v21.1). ",
-      "\nDashed Vertical line represents risk value reference line \nTotals for ",
+      "\nDashed Vertical line represents risk value reference line. \nTotals for ",
       "the No. of Participants/Events at a higher level are not necessarily the ",
-      "sum of those at the lower levels since a participant may report two or more",
-      " \nEvent counts are the sum of individual occurrences within that category"
+      "sum of those at the lower levels since a participant may report two or more.",
+      " \nEvent counts are the sum of individual occurrences within that category."
     )
   )
+})
+## Test with empty data
+test_that("Forest Plot works as expected with empty `risk_stat()` output", {
+  risk_stat_null <- tibble()
+  fp_null <- forest_plot(
+    datain = risk_stat_null,
+    AE_Filter = "Any",
+    review_by = c("AEBODSYS", "AEDECOD"),
+    summary_by = "Patients",
+    statistics = "Risk Ratio",
+    xref = 1,
+    pvalcut = 0.05,
+    trtbign = "Y",
+    scale_trans = "identity"
+  )
+  expect_equal(length(fp_null), 3)
+  expect_equal(names(fp_null), c("ptly", "plot", "rpt_data"))
+  expect_identical(risk_stat_null, fp_null$rpt_data)
 })

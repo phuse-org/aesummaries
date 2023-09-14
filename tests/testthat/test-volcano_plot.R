@@ -44,7 +44,7 @@ test_that("Test Case 1: volcano_plot works with expected inputs", {
   expect_equal(legendgroups, sort(unique(vout[["rpt_data"]][["BYVAR1"]])))
   expect_identical(vout$plot$data, vout$rpt_data)
   expect_equal(vout$title, "Volcano plot for Risk Difference of Safety Adverse Events")
-  expect_equal(vout$footnote, "* N is the total number of participants. \nClassifications of adverse events are based on the Medical Dictionary for Regulatory Activities (MedDRA v21.1). \nDashed horizontal line represents p-value of 0.05 \nDotted horizontal line represents FDR adjusted p-value of approximately 0.05 (when applicable) \nDashed Vertical line represents risk value reference line \nTotals for the No. of Participants/Events at a higher level are not necessarily the sum of those at the lower levels since a participant may report two or more \nThe number of participants reporting at least 1 occurrence of the event specified.") # nolint
+  expect_equal(vout$footnote, "* N is the total number of participants. \nClassifications of adverse events are based on the Medical Dictionary for Regulatory Activities (MedDRA v21.1). \nDashed horizontal line represents p-value of 0.05.\nDotted horizontal line represents FDR adjusted p-value of approximately 0.05 (when applicable). \nDashed Vertical line represents risk value reference line. \nTotals for the No. of Participants/Events at a higher level are not necessarily the sum of those at the lower levels since a participant may report two or more. \nThe number of participants reporting at least 1 occurrence of the event specified.") # nolint
 })
 
 
@@ -66,8 +66,8 @@ test_that("Test Case 2: volcano_plot returns pre processed AE data with
     pvalcut = 0.05
   )
 
-  expect_equal(length(vout), 2)
-  expect_equal(names(vout), c("plot", "rpt_data"))
+  expect_equal(length(vout), 3)
+  expect_equal(names(vout), c("ptly", "plot", "rpt_data"))
   expect_identical(ae_pre, vout$rpt_data)
   expect_identical(ae_pre$dsin, vout$rpt_data$dsin)
 })

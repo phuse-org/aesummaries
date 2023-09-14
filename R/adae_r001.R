@@ -117,11 +117,16 @@ adae_r001 <- function(datain,
       ui_dptvar = ui_ht,
       ui_pctdisp = recode(ui_pctdisp, "HT" = "TRT")
     ) %>% ungroup()
-
     # Cut off - apply to high term only:
     ht_dat <-
       subset(ht_dat, BYVAR1 %in% unique(BYVAR1[as.numeric(PCT) > ui_cutoff]))
-
+    if (is.null(ht_dat) || nrow(ht_dat) == 0) {
+      final_cts <- data.frame("Note" = "No data available under these conditions")
+      return(list(
+        tout = flextable(final_cts),
+        rpt_data = final_cts
+      ))
+    }
     # Vector of Unique High terms
     uniqHT1 <- unique(ht_dat[ht_dat$TRTVAR == levels(ht_dat$TRTVAR)[1], ]$DPTVAL)
     uniqHT <- c(
@@ -199,8 +204,7 @@ adae_r001 <- function(datain,
       sort_opt = ui_sortopt,
       sort_var = ui_sortvar
     ) %>% mutate(DPTVAR = ui_lt, CN = "C")
-
-    if (is.null(ht_dat)) {
+    if (is.null(ht_dat) || nrow(ht_dat) == 0) {
       final_cts <- data.frame("Note" = "No data available under these conditions")
       return(list(
         tout = flextable(final_cts),
@@ -242,8 +246,6 @@ adae_r001 <- function(datain,
 
   # Order of terms only:
   comb_order <- rbind(ht_dati, lt_dati)
-
-
   # Merge to get correct order:
   final_cts <- bind_rows(ht_dat, lt_dat) %>%
     select(-any_of(c("DPTVARN", "DPTVALN"))) %>%
@@ -270,8 +272,8 @@ adae_r001 <- function(datain,
       "Participants With ",
       AE_cond,
       " Adverse Events by Higher Term and Lower Term \n",
-      population,
-      " population"
+      "Population: ",
+      population
     )
   footnote <-
     paste0(
@@ -312,7 +314,6 @@ adae_r001 <- function(datain,
   } else {
     extra_var <- ""
   }
-
   ### Mdisplay:
   report1 <- mdisplay(
     datain = final_cts,
@@ -323,8 +324,6 @@ adae_r001 <- function(datain,
     trtbign = datain$bigN,
     colformat = " n(%)"
   )
-
-
   print("adae table sucess")
   return(list(
     tout = report1$tout,

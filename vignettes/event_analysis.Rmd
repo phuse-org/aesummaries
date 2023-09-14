@@ -22,23 +22,11 @@ This document details the steps for creating Event Analysis Plot using CVARS app
 
 ### 1.1 Report Inputs in App
 
-Upon loading the CVARS application, please select the `Data Source` and load the data.
-
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("cvars1look.png")
-```
-
-
-Upon loading/selecting `ADAE` data and clicking Report Inputs tab, report inputs can be added.
-
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("adae_report_input.png")
-```
-
+Upon loading/selecting `ADAE` data  
   - Report Type as `Figure` and Report Name as `Event Analysis` for the graph  
   
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_new_1.png")
+knitr::include_graphics("event_analysis_reportname.png")
 ```
 
  
@@ -56,8 +44,8 @@ knitr::include_graphics("event_analysis_new_1.png")
   
   - To subset entire data based on population flags, select `Population Filter`. eg. Overall,      Safety (SAFFL).
 
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_02.PNG")
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("adaebox_treatment.png")
 ```
 
 |     |
@@ -69,7 +57,7 @@ knitr::include_graphics("event_analysis_02.PNG")
   - Add or Edit the default `Analysis Subset Condition` and `Denominator Subset Condition` to      filter input data (for calculating categorical counts alone or for entire data                 respectively)
   
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_03.PNG")
+knitr::include_graphics("event_analysis_03.png")
 ```
 
   - Select `Adverse Event Filter(s)` - To filter input data
@@ -83,7 +71,7 @@ knitr::include_graphics("event_analysis_03.PNG")
  - Select `Reference Line (%)` - Reference lines show how the data in a chart compares to a      reference value. This is free text column where you can enter any number as reference         value. 
  
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_04.PNG")
+knitr::include_graphics("event_analysis_04.png")
 ```
 
 |     |

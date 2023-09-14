@@ -33,7 +33,7 @@ lt_dat <- risk_stat(
 test_that("Test Case 1: Risk table works with expected inputs", {
   ae_out <- adae_r001(
     datain = ae_pre,
-    population = "Overall",
+    population = "Overall Population",
     AE_Filter = "Any Event",
     riskyn = "Y",
     ctrlgrp = "Placebo",
@@ -72,7 +72,7 @@ test_that("Test Case 1: Risk table works with expected inputs", {
     ae_out$title,
     paste0(
       "Participants With Any Adverse Events by Higher Term and Lower ",
-      "Term \nOverall population"
+      "Term \nPopulation: Overall Population"
     )
   )
   expect_equal(
@@ -87,7 +87,7 @@ test_that("Test Case 1: Risk table works with expected inputs", {
 test_that("Test Case 2: No Risk table works with expected inputs", {
   ae_out2 <- adae_r001(
     datain = ae_pre,
-    population = "Overall",
+    population = "Overall Population",
     AE_Filter = NULL,
     riskyn = "N",
     ui_lt = "AEDECOD",
@@ -119,7 +119,7 @@ test_that("Test Case 2: No Risk table works with expected inputs", {
   # Check title and footnote
   expect_equal(
     ae_out2$title,
-    "Participants With  Adverse Events by Higher Term and Lower Term \nOverall population"
+    "Participants With  Adverse Events by Higher Term and Lower Term \nPopulation: Overall Population" # nolint
   )
   expect_equal(
     ae_out2$footnote,
@@ -130,7 +130,7 @@ test_that("Test Case 2: No Risk table works with expected inputs", {
 test_that("Test Case 3: Sorting performed correctly", {
   ae_out3 <- adae_r001(
     datain = ae_pre,
-    population = "Overall",
+    population = "Overall Population",
     AE_Filter = NULL,
     riskyn = "N",
     ui_lt = "AEDECOD",
@@ -169,7 +169,7 @@ test_that("Test Case 3: Sorting performed correctly", {
 test_that("Test Case 4: Percentage Denominator variation", {
   ae_out4 <- adae_r001(
     datain = ae_pre,
-    population = "Overall",
+    population = "Overall Population",
     AE_Filter = NULL,
     riskyn = "N",
     ui_lt = "AEDECOD",

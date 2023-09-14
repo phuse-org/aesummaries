@@ -1,6 +1,11 @@
 ---
-title: "Clinical Visual Analytics for Review and Submission(CVARS)"
+title: "Clinical Visual Analytics for Review and Submission (CVARS)"
 date: "`r Sys.Date()`"
+<<<<<<< HEAD
+output:
+  rmarkdown::html_vignette:
+    toc: true
+=======
 author:
 - Clinical Tables & Figures
 - CVARS
@@ -15,8 +20,9 @@ html_document:
     includes:
       in_header: "header.html"
 
+>>>>>>> 0cd101109665f2699b442aa971069068a28e65d5
 vignette: >
-  %\VignetteIndexEntry{Clinical Visual Analytics for Review and Submission(CVARS)}
+  %\VignetteIndexEntry{Clinical Visual Analytics for Review and Submission (CVARS)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}    
 ---
@@ -24,12 +30,6 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-# **Table of Contents**
-
-|     |
-|-----|
-|     |
 
 ## **1. Overview**
 
@@ -42,7 +42,7 @@ By uploading data locally or can use default CDISC data, user can explore releva
 knitr::include_graphics("cvars1look.png")
 ```
 
-This is the look and feel of the CVARS application initially when one loads the app. Now that the app is ready to use, the user needs to feed in the data for which the report and graphs are visualized. There are 5 tabs in the main window: `Report Inputs` to give inputs for reports, `Files & Lot` to show the list of available datasets for the selected study, `Data Check` to view the reported values for the selected variable, `Graph Output` to display any graph generated, and `Table Output` to display any table generated. 
+This is the look and feel of the CVARS application initially when one loads the app. Now that the app is ready to use, the user needs to feed in the data for which the report and graphs are visualized. There are 4 tabs in the main window: `Report Inputs` to give inputs for reports, `Data Check` to view the reported values for the selected variable, `Graph Output` to display any graph generated, and `Table Output` to display any table generated. 
 
 |     |
 |-----|
@@ -51,7 +51,7 @@ This is the look and feel of the CVARS application initially when one loads the 
 
 ### 1.1 Data Import
 
-Data can be uploaded from *Local* location. The file can only be of ".csv", ".sas7bdat", ".xpt" and ".Rda" format and must follow the naming convention of "adXX" where "XX" is the domain code. For example, "adae.sas7bdat" and "adae.xpt" are valid whereas "adae_s1.sas7bdat" or "adae2.sas7bdat" are not valid. In the *Data Source* panel, you can see the following options: Default, and Local.
+Data can be uploaded from *Local* location. The file can only be of ".csv", ".sas7bdat", ".xpt" and ".Rda" format and must follow the naming convention of "adXX" where "XX" is the domain code. For example, "adae.sas7bdat" and "adae.xpt" are valid whereas "adae_s1.sas7bdat" or "adae2.sas7bdat" are not valid. In the *Data Source* panel, you can see the following options: Default and Local.
 
 |     |
 |-----|
@@ -103,19 +103,7 @@ Data import, Report Selection and Treatment variable Selection
 
 
 This section presents detailed the steps for creating Volcano Plot using CVARS application which is a graph report. The required input `ADaM` data for this is an `ADAE` dataset.
-
-
-Upon loading the CVARS  application, please select the `Data Source`and load the `ADAE` data.
-
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("adaeenter.png")
-```
-
 Upon loading/selecting `ADAE` data and clicking the Report Inputs tab, report inputs can be added.
-
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("adae_report_input.png")
-```
 
   - Report Type as `Figure` and Report Name as `Volcano Plot` for the graph  
   
@@ -133,17 +121,17 @@ knitr::include_graphics("volcano_plot_new_1.png")
   
   - To subset entire data based on population flags, select `Population Filter`. eg. Overall,      Safety (SAFFL).
 
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_02.PNG")
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("adaebox_treatment.png")
 ```
-
+  
 
 **Processing Data:**  
 
   - Add or Edit the default `Analysis Subset Condition` and `Denominator Subset Condition` to      filter input data (for calculating categorical counts alone or for entire data                 respectively)
   
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_03.PNG")
+knitr::include_graphics("event_analysis_03.png")
 ```
 
   - Select `Adverse Event Filter(s)` - To filter input data
@@ -166,7 +154,7 @@ knitr::include_graphics("event_analysis_03.PNG")
  
  
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("volcano_plot_02.PNG")
+knitr::include_graphics("volcano_plot_02.png")
 ```
 
 **Graph Output:**
@@ -175,7 +163,7 @@ knitr::include_graphics("volcano_plot_02.PNG")
 
   
 ```{r, echo=FALSE, out.width="70%", fig.align='center'}
-knitr::include_graphics("volcano_plot_03.PNG")
+knitr::include_graphics("volcano_plot_03.png")
 ```
 
 
@@ -209,8 +197,8 @@ knitr::include_graphics("forestplot_new_1.png")
   - Select appropriate `Treatment Sort Variable` which will give the order for sorting Treatment variable  
   - To subset entire data based on available population flags, select `Population Filter`. eg. Overall, Safety (SAFFL) etc  
   
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("adae_treatment.png")
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("adaebox_treatment.png")
 ```
   
 **Data Pre-processing/Preparation**  
@@ -294,25 +282,13 @@ knitr::include_graphics("forest_output.png")
 
 This document details the steps for creating Event Analysis Plot using A&R application which is a graph report. The required input ADaM data for this is an ADAE dataset.
 
-#### 2.2.1 Report Inputs in App
+#### 2.2.1 Report Inputs in App  
 
-Upon loading the CVARS application, please select the `Data Source` and load the data.
-
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("cvars1look.png")
-```
-
-
-Upon loading/selecting `ADAE` data and clicking Report Inputs tab, report inputs can be added.
-
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("adae_report_input.png")
-```
-
+Upon loading/selecting `ADAE` data  
   - Report Type as `Figure` and Report Name as `Event Analysis` for the graph  
   
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_new_1.png")
+knitr::include_graphics("event_analysis_reportname.png")
 ```
 
  
@@ -330,10 +306,10 @@ knitr::include_graphics("event_analysis_new_1.png")
   
   - To subset entire data based on population flags, select `Population Filter`. eg. Overall,      Safety (SAFFL).
 
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_02.PNG")
+```{r, echo=FALSE, out.width="70%", fig.align='center'}
+knitr::include_graphics("adaebox_treatment.png")
 ```
-
+  
 |     |
 |-----|
 |     |
@@ -343,7 +319,7 @@ knitr::include_graphics("event_analysis_02.PNG")
   - Add or Edit the default `Analysis Subset Condition` and `Denominator Subset Condition` to      filter input data (for calculating categorical counts alone or for entire data                 respectively)
   
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_03.PNG")
+knitr::include_graphics("event_analysis_03.png")
 ```
 
   - Select `Adverse Event Filter(s)` - To filter input data
@@ -357,7 +333,7 @@ knitr::include_graphics("event_analysis_03.PNG")
  - Select `Reference Line (%)` - Reference lines show how the data in a chart compares to a      reference value. This is free text column where you can enter any number as reference         value. 
  
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("event_analysis_04.PNG")
+knitr::include_graphics("event_analysis_04.png")
 ```
 
 |     |
@@ -515,7 +491,28 @@ After selecting a format and Table/Figure, click the 'Save' button and you will 
 |-----|
 |     |
 
-## **4. Usage Notes and Common Errors**
+## **4. Listings and Patient Profile (For Adverse Events figures only)**
+
+The 3 Adverse Events Figure reports - Forest Plot, Volcano Plot and Event Analysis - have an added feature of being able to view the listing and relevant patient information from the main plot.  
+Clicking on a point or bar of interest in any of the 3 plots will result in creation of a listing of all participants in the data with the selected Event Classification and Treatment group with relevant info such as Outcomes, Severity, Event Start and End Dates etc. This is displayed as a table below the plot.  
+
+```{r, echo=FALSE, out.width="60%", fig.align='center'}
+knitr::include_graphics("listing_1.png")
+```
+
+Further, clicking on any one of the rows in the listing results in creation of a figure (interval plot) for each participant which illustrates the start, end date and interval during which the selected patient experienced any adverse events.  
+Additionally, if `CM` or `ADCM` data is loaded in the app, the above-mentioned graph overlays another figure displaying similar intervals for when the participant was on concomitant medications. This figure is displayed below the listing.  
+
+```{r, echo=FALSE, out.width="60%", fig.align='center'}
+knitr::include_graphics("profile_1.png")
+```
+
+
+|     |
+|-----|
+|     |
+
+## **5. Usage Notes and Common Errors**
 
 -   When subset conditions, population or adverse event filters are selected, check that there is any data within those filters. If not, reports may fail or display a message that there is no data.
 
@@ -527,9 +524,9 @@ After selecting a format and Table/Figure, click the 'Save' button and you will 
 |-----|
 |     |
 
-## **5. App Development Details**
+## **6. App Development Details**
 
-R version 4.1.0 Packages: cowplot : 1.1.1; data.table : 1.14.2; DT : 0.26; epitools : 0.5-10.1; flextable : 0.8.2; ftExtra : 0.4.0; ggstance : 0.3.5; haven : 2.5.1; htmltools : 0.5.3; officer : 0.4.4; plotly : 4.10.0; RCurl : 1.98-1.8; readxl : 1.4.1; scales : 1.2.1; shiny : 1.7.2; shinycssloaders : 1.0.0; shinydashboard : 0.7.2; shinyjs : 2.1.0; shinyWidgets : 0.7.4; tidyverse : 1.3.2; tools : 4.1.0
+R version 4.1.0 Packages: cowplot : 1.1.1; data.table : 1.14.2; DT : 0.26; epitools : 0.5-10.1; flextable : 0.8.2; ftExtra : 0.4.0; ggstance : 0.3.5; haven : 2.5.1; htmltools : 0.5.3; officer : 0.4.4; plotly : 4.10.0; RCurl : 1.98-1.8; readxl : 1.4.1; scales : 1.2.1; shiny : 1.7.2; shinycssloaders : 1.0.0; bs4dash : 2.3.0; shinyjs : 2.1.0; shinyWidgets : 0.7.4; tidyverse : 1.3.2; tools : 4.1.0
 
 |     |
 |-----|

@@ -173,3 +173,86 @@ var_start <- function(df, pattern) {
     sort(names(df)[startsWith(names(df), pattern) & (!endsWith(names(df), "N"))])
   }
 }
+
+#' Empty plot with message
+#'
+#' @param message Required message to be displayed within plot area
+#' @param fontsize Set the font size of the message
+#'
+#' @return a list containing 2 objects
+#' \itemize{
+#' \item ptly - Interactive empty plot
+#' \item plot - Static empty plot
+#'  }
+#' @export
+#'
+#' @examples
+#' library(cvars)
+#' empty_plot()
+empty_plot <- function(message = "No data available for these values",
+                       fontsize = 8) {
+  g_plot <- ggplot() +
+    annotate("text",
+      x = 1, y = 1, size = fontsize,
+      label = message
+    ) +
+    theme_void()
+  fig <- plotly::ggplotly(g_plot, height = 200) %>%
+    plotly::layout(
+      xaxis = list(visible = FALSE), yaxis = list(visible = FALSE)
+    )
+  return(list(plot = g_plot, ptly = fig))
+}
+
+#' Report Metadata
+#'
+#' @return `data.frame` containing report metadata
+#' @noRd
+#'
+get_report_meta <- function() {
+  tibble::tribble(
+    ~TA,
+    ~DOMAIN,
+    ~REPNAME,
+    ~REPDESC,
+    ~REPNO,
+    ~REPTYPE,
+    "Any",
+    "ADAE",
+    "adae_r001",
+    "Summary of Adverse Events by System Organ Class and Preferred Term",
+    "2.1",
+    "Table",
+    "Any",
+    "ADAE",
+    "Forest Plot",
+    "Forest plot for adverse events",
+    "2.2",
+    "Figure",
+    "Any",
+    "ADAE",
+    "Volcano Plot",
+    "Volcano plot for adverse events",
+    "2.4",
+    "Figure",
+    "Any",
+    "ADAE",
+    "Event Analysis",
+    "Event analysis of MedRA query",
+    "2.5",
+    "Figure",
+  )
+}
+
+get_ae_term <- function() {
+  aeTerm <- c(
+    "Reported Term for the Adverse Event (AETERM)" = "AETERM",
+    "AE Lowest Level Term (AELLT)" = "AELLT",
+    "AE Dictionary-Derived Term (AEDECOD)" = "AEDECOD",
+    "AE High Level Term (AEHLT)" = "AEHLT",
+    "AE High Level Group Term (AEHLGT)" = "AEHLGT",
+    "Primary System Organ Class (AESOC)" = "AESOC",
+    "Body System or Organ Class (AEBODSYS)" = "AEBODSYS",
+    "FMQ Name (FMQ_NAM)" = "FMQ_NAM"
+  )
+}

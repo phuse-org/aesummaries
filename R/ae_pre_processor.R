@@ -95,9 +95,65 @@ ae_pre_processor <- function(
       left_join(fmq, by = c("PT_NAME" = "PT"))
   }
 
+
+  # pre process for AE data
+
+  # standardizing date format to common format
+  date_formats <- c("%d%b%Y", "%Y-%m-%d", "%m/%d/%Y", "%d/%m/%Y")
+  if ("AESTDT" %in% names(datain)) {
+    data_pro <- datain %>%
+      mutate(AESTDT = as.Date(AESTDT, tryFormats = date_formats, optional = FALSE))
+  } else {
+    data_pro <- datain %>%
+      mutate(AESTDT = as.Date(ASTDT, tryFormats = date_formats, optional = FALSE))
+  }
+  if ("AEENDT" %in% names(datain)) {
+    data_pro <- data_pro %>%
+      mutate(AEENDT = as.Date(AEENDT, tryFormats = date_formats, optional = FALSE))
+  } else {
+    data_pro <- data_pro %>%
+      mutate(AEENDT = as.Date(AENDT, tryFormats = date_formats, optional = FALSE))
+  }
+  if ("RFSTDTC" %in% names(datain)) {
+    data_pro <- data_pro %>%
+      mutate(RFSTDTC = as.Date(RFSTDTC, tryFormats = date_formats, optional = FALSE))
+  } else {
+    data_pro <- data_pro %>%
+      mutate(RFSTDTC = as.Date(TRTSDT, tryFormats = date_formats, optional = FALSE))
+  }
+
+  if ("RFENDTC" %in% names(datain)) {
+    data_pro <- data_pro %>%
+      mutate(RFENDTC = as.Date(RFENDTC, tryFormats = date_formats, optional = FALSE))
+  } else {
+    data_pro <- data_pro %>%
+      mutate(RFENDTC = as.Date(TRTEDT, tryFormats = date_formats, optional = FALSE))
+  }
+
+  # Eliminating not coded AE terms and recodeing Toxicity to severity
+  data_pro <- data_pro %>%
+    tidyr::drop_na(RFSTDTC) %>%
+    mutate(
+      AEDECOD = if_else(!is.na(AESTDT) & is.na(AEDECOD), "Not yet coded", AEDECOD),
+      AESTDT = if_else(is.na(AESTDT) & !is.na(AEDECOD), RFSTDTC, AESTDT)
+    )
+  if ("AESEV" %in% (names(data_pro))) {
+    data_pro <- data_pro %>% mutate(AESEV = toupper(AESEV))
+  } else if ("ASEV" %in% names(data_pro)) {
+    data_pro <- data_pro %>% mutate(AESEV = toupper(ASEV))
+  } else if ("ATOXGR" %in% (names(data_pro))) {
+    data_pro <- data_pro %>% mutate(AESEV = recode(toupper(ATOXGR),
+      "GRADE 0" = "MILD",
+      "GRADE 1" = "MILD",
+      "GRADE 2" = "MODERATE",
+      "GRADE 3" = "MODERATE",
+      "GRADE 4" = "SEVERE",
+      "GRADE 5" = "SEVERE"
+    ))
+  }
   ## Calling Mentry to process treatment variable , grouping variables, total trt, Big N calculation
   mdsin <- mentry(
-    datain = datain,
+    datain = data_pro,
     ui_aSubset = aeSubset,
     ui_dSubset = aeDenomSubset,
     ui_byvar = aeByVar,
@@ -110,73 +166,26 @@ ae_pre_processor <- function(
     ui_addGrpMiss = aeGrpVarMiss,
     ui_pop_fil = pop_fil
   )
-
-  # pre process for AE data
   dsin <- mdsin$dsin
-
-  # standardizing date format to common format
-  date_formats <- c("%d%b%Y", "%Y-%m-%d", "%m/%d/%Y", "%d/%m/%Y")
-  if ("AESTDT" %in% names(dsin)) {
-    df1 <- dsin %>% mutate(AESTDT = as.Date(AESTDT, tryFormats = date_formats, optional = FALSE))
-  } else {
-    df1 <- dsin %>% mutate(AESTDT = as.Date(ASTDT, tryFormats = date_formats, optional = FALSE))
-  }
-  if ("AEENDT" %in% names(dsin)) {
-    df1 <- df1 %>% mutate(AEENDT = as.Date(AEENDT, tryFormats = date_formats, optional = FALSE))
-  } else {
-    df1 <- df1 %>% mutate(AEENDT = as.Date(AENDT, tryFormats = date_formats, optional = FALSE))
-  }
-  if ("RFSTDTC" %in% names(dsin)) {
-    df1 <- df1 %>% mutate(RFSTDTC = as.Date(RFSTDTC, tryFormats = date_formats, optional = FALSE))
-  } else {
-    df1 <- df1 %>% mutate(RFSTDTC = as.Date(TRTSDT, tryFormats = date_formats, optional = FALSE))
-  }
-
-  if ("RFENDTC" %in% names(dsin)) {
-    df1 <- df1 %>% mutate(RFENDTC = as.Date(RFENDTC, tryFormats = date_formats, optional = FALSE))
-  } else {
-    df1 <- df1 %>% mutate(RFENDTC = as.Date(TRTEDT, tryFormats = date_formats, optional = FALSE))
-  }
-
-  # Eliminating not coded AE terms and recodeing Toxicity to severity
-  df1 <- df1 %>%
-    tidyr::drop_na(RFSTDTC) %>%
-    mutate(
-      AEDECOD = ifelse(!is.na(AESTDT) & is.na(AEDECOD), "Not yet coded", AEDECOD),
-      AESTDT = ifelse(is.na(AESTDT) & !is.na(AEDECOD), RFSTDTC, AESTDT)
-    )
-  if ("AESEV" %in% (names(df1))) {
-    df1 <- df1 %>% mutate(AESEV = toupper(AESEV))
-  } else if ("ATOXGR" %in% (names(df1))) {
-    df1 <- df1 %>% mutate(AESEV = recode(toupper(ATOXGR),
-      "GRADE 0" = "MILD",
-      "GRADE 1" = "MILD",
-      "GRADE 2" = "MODERATE",
-      "GRADE 3" = "MODERATE",
-      "GRADE 4" = "SEVERE",
-      "GRADE 5" = "SEVERE"
-    ))
-  }
-
   # applying fliter conditional from the UI filter element for AE reports
   # filter data for seriousness, drug-related, and severity
   if (length(ae_filter) > 0) {
     if ("Any Event" %in% ae_filter) {
-      df1 <- df1
+      dsin <- dsin
     }
     if ("Treatment emergent" %in% ae_filter) {
-      df1 <- df1 %>% filter(TRTEMFL == "Y")
+      dsin <- dsin %>% filter(TRTEMFL == "Y")
     }
     if ("Serious" %in% ae_filter) {
-      df1 <- df1 %>% filter(AESER == "Y")
+      dsin <- dsin %>% filter(AESER == "Y")
     }
 
     if ("Drug-related" %in% ae_filter) {
-      df1 <- df1 %>% filter(AEREL == "RELATED")
+      dsin <- dsin %>% filter(AEREL == "RELATED")
     }
     if (sum(c("Mild", "Moderate", "Severe") %in% ae_filter) > 0) {
       severity_filter <- ae_filter[which(ae_filter %in% c("Mild", "Moderate", "Severe"))]
-      df1 <- df1 %>% filter(AESEV %in% toupper(severity_filter))
+      dsin <- dsin %>% filter(AESEV %in% toupper(severity_filter))
     }
 
     if (sum(c(
@@ -188,21 +197,21 @@ ae_pre_processor <- function(
         "Recovering/Resolving",
         "Not Recovered/Not Resolved", "Fatal"
       ))]
-      df1 <- df1 %>% filter(AEOUT %in% toupper(severity_filter))
+      dsin <- dsin %>% filter(AEOUT %in% toupper(severity_filter))
     }
   }
 
   # filter ae data occurred in the given time frame
   if (aeObsPeriod == "Overall Duration") {
-    if ("STUDYFL" %in% names(df1)) {
-      df1 <- df1 %>%
+    if ("STUDYFL" %in% names(dsin)) {
+      dsin <- dsin %>%
         filter(STUDYFL == "Y")
     } else {
-      df1 <- df1
+      dsin <- dsin
     }
   } else if (aeObsPeriod == "Other") {
-    df1 <- df1 %>%
+    dsin <- dsin %>%
       filter((AESTDT > RFSTDTC) & (AESTDT < (RFENDTC + aeObsResidual)))
   }
-  return(list(dsin = df1, dout = mdsin$dout, bigN = mdsin$bign))
+  return(list(dsin = dsin, dout = mdsin$dout, bigN = mdsin$bign))
 }

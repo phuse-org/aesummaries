@@ -64,26 +64,8 @@ volcano_plot <- function(datain,
   ### Construction of volcano plot
   # Check if getstats data is empty:
   if (nrow(statistics_data) == 0) {
-    p <- ggplot() +
-      annotate(
-        "text",
-        x = 4,
-        y = 25,
-        size = 8,
-        label = "No data selected for plot."
-      ) +
-      theme_bw() +
-      theme(
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        axis.title.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank(),
-        axis.title.y = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank()
-      )
-    return(list(plot = p, rpt_data = datain))
+    output <- empty_plot()
+    return(list(ptly = output$ptly, plot = output$plot, rpt_data = datain))
   }
 
   statistics_data <- statistics_data %>% filter(RISK != Inf)
@@ -180,37 +162,36 @@ volcano_plot <- function(datain,
   }
 
   text1 <- paste0(
-    "<- Favors ", treatment1_label,
+    "<---- Favors ", treatment1_label,
     " (N=", N1_Total, ")"
   )
   text2 <- paste0(
     "Favors ", treatment2_label,
-    " (N=", N2_Total, ") ->"
+    " (N=", N2_Total, ") ---->"
   )
 
-  lab1 <-
-    paste(statistics, treatment1_label, "vs.", treatment2_label)
-  lab2 <- paste(text1, text2)
+  lab2 <- paste0(text1, "  -----  ", text2)
 
-  label_fin <- unique(paste0(lab2, "\n", lab1))
+  label_fin <- unique(paste0(lab2, "\n", statistics))
 
   output <-
     plotly::ggplotly(
       p,
       tooltip = c("text"),
       source = "plot_output",
-      height = 800,
-      width = 800
+      height = 600,
+      width = 1000
     ) %>%
     plotly::layout(
       legend = list(
-        font = list(size = 8.5),
+        font = list(size = 8),
         orientation = "h",
-        x = 0.4,
-        y = -0.2
+        x = 0.5,
+        y = -0.2,
+        xanchor = "center", yanchor = "top"
       ),
       title = list(text = ""),
-      xaxis = list(title = unique(paste0(lab2, "<br>", lab1))),
+      xaxis = list(title = unique(paste0(lab2, "<br>", statistics))),
       yaxis = list(title = "")
     )
 
@@ -240,14 +221,14 @@ volcano_plot <- function(datain,
     ifelse(tolower(summary_by) == "patients", "participants", "events"),
     ". \n",
     "Classifications of adverse events are based on the Medical Dictionary for Regulatory Activities (MedDRA v21.1). \n", # nolint
-    "Dashed horizontal line represents p-value of 0.05 \n",
-    "Dotted horizontal line represents FDR adjusted p-value of approximately 0.05 (when applicable) \n", # nolint
-    "Dashed Vertical line represents risk value reference line \n",
-    "Totals for the No. of Participants/Events at a higher level are not necessarily the sum of those at the lower levels since a participant may report two or more \n", # nolint
+    "Dashed horizontal line represents p-value of ", pvalcut, ".\n",
+    "Dotted horizontal line represents FDR adjusted p-value of approximately ", pvalcut, " (when applicable). \n", # nolint
+    "Dashed Vertical line represents risk value reference line. \n",
+    "Totals for the No. of Participants/Events at a higher level are not necessarily the sum of those at the lower levels since a participant may report two or more. \n", # nolint
     ifelse(
       tolower(summary_by) == "patients",
       "The number of participants reporting at least 1 occurrence of the event specified.",
-      "Event counts are the sum of individual occurrences within that category"
+      "Event counts are the sum of individual occurrences within that category."
     )
   )
 

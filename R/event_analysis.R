@@ -79,7 +79,7 @@ event_analysis <- function(datain = NULL,
   if (hl_var %in% c("FMQ_NAM", "SMQ_NAM", "CQ_NAM")) {
     hl_summ <- event_mcat %>% # filter(BYVAR1%in%hl_val1) %>%
       filter(str_detect(toupper(BYVAR1), toupper(hl_val1))) %>%
-      mutate(Percent = paste(PCT, "% \n PT:", DPTVAL)) %>%
+      mutate(Percent = paste(PCT, "% \n Low Term:", DPTVAL)) %>%
       group_by(TRTVAR) %>%
       mutate(
         pct = as.numeric(PCT),
@@ -88,7 +88,7 @@ event_analysis <- function(datain = NULL,
   } else {
     hl_summ <- event_mcat %>% # filter(BYVAR1%in%hl_val1) %>%
       filter(toupper(BYVAR1) == toupper(hl_val1)) %>%
-      mutate(Percent = paste(PCT, "% \n PT:", DPTVAL)) %>%
+      mutate(Percent = paste(PCT, "% \n Low Term:", DPTVAL)) %>%
       group_by(TRTVAR) %>%
       mutate(
         pct = as.numeric(PCT),
@@ -148,7 +148,7 @@ event_analysis <- function(datain = NULL,
     )
 
   pt_plot1 <- pt_plot + ggtitle(paste0(str_to_title(ll_val), " PT"))
-  pt_ptly <- plotly::ggplotly(pt_plot, tooltip = "text") %>%
+  pt_ptly <- plotly::ggplotly(pt_plot, tooltip = "text", source = "plot_output") %>%
     plotly::add_annotations(
       text = paste0(str_to_title(ll_val), " PT"),
       x = 0.5,
@@ -209,7 +209,7 @@ event_analysis <- function(datain = NULL,
       toupper(sub("\\_.*", "", hl_var)),
       " Categorization of ", str_to_title(hl_val)
     ), width = 80))
-  query_ptly <- plotly::ggplotly(query_plot, tooltip = "text") %>%
+  query_ptly <- plotly::ggplotly(query_plot, tooltip = "text", source = "plot_output") %>%
     plotly::add_annotations(
       text = str_wrap(paste0(
         toupper(sub("\\_.*", "", hl_var)),
@@ -226,7 +226,6 @@ event_analysis <- function(datain = NULL,
       font = list(size = 12)
     ) %>%
     plotly::layout(legend = list(title = ""))
-
   inter_fig <- plotly::subplot(
     pt_ptly,
     query_ptly,
@@ -235,7 +234,7 @@ event_analysis <- function(datain = NULL,
     shareY = TRUE,
     widths = c(0.5, 0.5),
     margin = 0.005
-  ) %>% plotly::layout(showlegend = TRUE)
+  ) %>% plotly::layout(showlegend = TRUE, height = 600)
 
   static_fig <- cowplot::plot_grid(
     pt_plot1,
@@ -251,17 +250,15 @@ event_analysis <- function(datain = NULL,
     "* N is the total number of ",
     ifelse(tolower(summary_by) == "patients", "participants", "events"),
     ". \n",
-    "Classifications of adverse events are based on the Medical Dictionary for Regulatory
-    Activities (MedDRA v21.1). \n",
+    "Classifications of adverse events are based on the Medical Dictionary for Regulatory Activities (MedDRA v21.1). \n", # nolint
     "FMQ classification is based on FDA FMQ consolidated list. \n",
     "Dashed Horizontal line represents incidence percentage reference line. \n",
-    "Totals for the No. of Participants/Events at a higher level are not necessarily the sum of
-    those at the lower levels since a participant may report two or more \n",
+    "Totals for the No. of Participants/Events at a higher level are not necessarily the sum of those at the lower levels since a participant may report two or more. \n", # nolint
     "PT - Preferred Term ; FMQ - FDA MedDRA Queries \n",
     ifelse(
       tolower(summary_by) == "patients",
       "The number of participants reporting at least 1 occurrence of the event specified.",
-      "Event counts are the sum of individual occurrences within that category"
+      "Event counts are the sum of individual occurrences within that category."
     )
   )
 
@@ -271,6 +268,7 @@ event_analysis <- function(datain = NULL,
       ptly = inter_fig,
       plot = static_fig,
       rpt_data = hl_summ,
+      rpt_data1 = ll_summ,
       title = title,
       footnote = footnote
     )
