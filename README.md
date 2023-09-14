@@ -4,10 +4,10 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/pfizer-rd/spa-r-ae-summaries/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pfizer-rd/spa-r-ae-summaries/actions/workflows/R-CMD-check.yaml)
-[![test-coverage](https://github.com/pfizer-rd/spa-r-ae-summaries/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/pfizer-rd/spa-r-ae-summaries/actions/workflows/test-coverage.yaml)
-[![lint](https://github.com/pfizer-rd/spa-r-ae-summaries/actions/workflows/lint.yaml/badge.svg)](https://github.com/pfizer-rd/spa-r-ae-summaries/actions/workflows/lint.yaml)
-[![Style](https://github.com/pfizer-rd/spa-r-ae-summaries/actions/workflows/styler.yaml/badge.svg)](https://github.com/pfizer-rd/spa-r-ae-summaries/actions/workflows/styler.yaml)
+[![R-CMD-check](https://github.com/phuse-org/aesummaries/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/phuse-org/aesummaries/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/phuse-org/aesummaries/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/phuse-org/aesummaries/actions/workflows/test-coverage.yaml)
+[![lint](https://github.com/phuse-org/aesummaries/actions/workflows/lint.yaml/badge.svg)](https://github.com/phuse-org/aesummaries/actions/workflows/lint.yaml)
+[![Style](https://github.com/phuse-org/aesummaries/actions/workflows/styler.yaml/badge.svg)](https://github.com/phuse-org/aesummaries/actions/workflows/styler.yaml)
 <!-- badges: end -->
 
 Clinical Visual Analytics for Review and Submission
